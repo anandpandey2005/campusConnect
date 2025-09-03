@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { Branch } from "./branch.model.js";
 import { Course } from "./course.model.js";
 
-const StudentSchema = new Schema(
+const UserSchema = new Schema(
   {
     avatar: {
       type: String,
@@ -57,4 +57,4 @@ const StudentSchema = new Schema(
   { timestamps: true }
 );
 
-export const Student = mongoose.model("Student", StudentSchema);
+export const User = mongoose.model("User", StudentSchema);

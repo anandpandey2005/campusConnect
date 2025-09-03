@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Course } from "./course.model.js";
-import { Student } from "./student.model.js";
+import { User } from "./user.model.js";
 import { Branch } from "./branch.model.js";
 
 const CollegeSchema = new Schema(
@@ -34,7 +34,7 @@ const CollegeSchema = new Schema(
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Student,
+        ref: User,
       },
     ],
   },
