@@ -1,13 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 import slugify from "slugify";
+import { User } from "./user.model.js";
 
 const BranchSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
     },
+    students: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: User,
+      },
+    ],
     slug: {
       type: String,
       unique: true,

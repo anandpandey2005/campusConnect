@@ -5,11 +5,45 @@ import { Branch } from "./branch.model.js";
 
 const CollegeSchema = new Schema(
   {
+    logo: {
+      type: String,
+      default:
+        "https://fastly.picsum.photos/id/350/200/200.jpg?hmac=-NwRXVlLAsHSv2w1c-2f87EaJ_177lOazxTj_4-Gdmw",
+    },
     name: {
       type: String,
       required: true,
       trim: true,
       capitalize: true,
+    },
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    website: {
+      type: String,
+      trim: true,
+      default: "#",
+    },
+    contact: {
+      mob1: {
+        type: Number,
+        trim: true,
+      },
+      mob2: {
+        type: Number,
+        trim: true,
+      },
+      tel: {
+        type: Number,
+        trim: true,
+      },
+      landline: {
+        type: Number,
+        trim: true,
+      },
     },
     address: {
       line1: { type: String, required: true, trim: true },
@@ -23,12 +57,6 @@ const CollegeSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: Course,
-      },
-    ],
-    branch: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Branch,
       },
     ],
     students: [

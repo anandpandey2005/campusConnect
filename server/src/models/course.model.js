@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Branch } from "./branch.model.js";
 
 const CourseSchema = new Schema(
   {
@@ -6,6 +7,10 @@ const CourseSchema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    branch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Branch,
     },
   },
   { timestamps: true }
