@@ -59,6 +59,12 @@ const CollegeSchema = new Schema(
         ref: Course,
       },
     ],
+    studentslist_enrollment: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
