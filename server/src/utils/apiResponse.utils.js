@@ -1,12 +1,5 @@
 export class ApiResponse {
-  constructor(
-    success,
-    message,
-    data = null,
-    statusCode,
-    errors = null,
-    path = null
-  ) {
+  constructor(success, message, data = null, statusCode, errors = null, path = null) {
     this.success = success;
     this.message = message;
     this.data = data;
@@ -19,35 +12,12 @@ export class ApiResponse {
   static success(res, data = {}, message = "Success", statusCode = 200) {
     return res
       .status(statusCode)
-      .json(
-        new ApiResponse(
-          true,
-          message,
-          data,
-          statusCode,
-          null,
-          res.req?.originalUrl
-        )
-      );
+      .json(new ApiResponse(true, message, data, statusCode, null, res.req?.originalUrl));
   }
 
-  static error(
-    res,
-    message = "Something went wrong",
-    statusCode = 500,
-    errors = null
-  ) {
+  static error(res, message = "Something went wrong", statusCode = 500, errors = null) {
     return res
       .status(statusCode)
-      .json(
-        new ApiResponse(
-          false,
-          message,
-          null,
-          statusCode,
-          errors,
-          res.req?.originalUrl
-        )
-      );
+      .json(new ApiResponse(false, message, null, statusCode, errors, res.req?.originalUrl));
   }
 }

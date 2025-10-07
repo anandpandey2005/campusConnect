@@ -5,4 +5,4 @@ studentRoutes.get("/profile", (req, res) => {
   res.send("User Profile");
 });
 
-export { studentRoutes};
+export { studentRoutes };

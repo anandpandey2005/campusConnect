@@ -1,76 +1,71 @@
 import mongoose, { Schema } from "mongoose";
-import { Course } from "./course.model.js";
-import { User } from "./user.model.js";
-import { Branch } from "./branch.model.js";
 
 const CollegeSchema = new Schema(
   {
     logo: {
       type: String,
-      default:
-        "https://fastly.picsum.photos/id/350/200/200.jpg?hmac=-NwRXVlLAsHSv2w1c-2f87EaJ_177lOazxTj_4-Gdmw",
-    },
-    name: {
-      type: String,
-      required: true,
       trim: true,
-      capitalize: true,
     },
     code: {
       type: String,
-      required: true,
-      unique: true,
       trim: true,
+      lowercase: true,
+      required: [true, "college code missing"],
+      unique: true,
+    },
+    name: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      required: [true, "college name missing"],
+    },
+    campus: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      required: [true, "college campus missing"],
     },
     website: {
       type: String,
       trim: true,
-      default: "#",
     },
-    contact: {
-      mob1: {
-        type: Number,
-        trim: true,
-      },
-      mob2: {
-        type: Number,
-        trim: true,
-      },
-      tel: {
-        type: Number,
-        trim: true,
-      },
-      landline: {
-        type: Number,
-        trim: true,
-      },
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: [true, "email missing"],
+    },
+    phonenumber: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: [true, "phonenumber missing"],
+    },
+    password: {
+      type: String,
+      required: [true, "passwrod missing"],
     },
     address: {
-      line1: { type: String, required: true, trim: true },
-      line2: { type: String, trim: true },
-      city: { type: String, required: true, trim: true },
-      state: { type: String, required: true, trim: true },
-      country: { type: String, required: true, trim: true },
-      zipCode: { type: String, required: true, trim: true },
+      line1: {
+        type: String,
+        trim: true,
+        required: [true, "line 1 field missing"],
+      },
+      line2: {
+        type: String,
+        trim: true,
+        required: [true, "line 2 field missing"],
+      },
+      line3: {
+        type: String,
+        trim: true,
+      },
+      pincode: {
+        type: String,
+        trim: true,
+        required: [true, "pincode missing"],
+      },
     },
-    course: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Course,
-      },
-    ],
-    studentslist_enrollment: [
-      {
-        type: Number,
-        required: true,
-      },
-    ],
-    students: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: User,
-      },
-    ],
   },
   { timestamps: true }
 );

@@ -1,16 +1,24 @@
 import mongoose, { Schema } from "mongoose";
-import { Branch } from "./branch.model.js";
 
 const CourseSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
       trim: true,
+      lowercase: true,
+      required: [true, "Course name is required"],
     },
-    branch: {
+    college: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Branch,
+      ref: "College",
+      required: [true, "College reference is required"],
+    },
+    specialization: {
+      type: String,
+      default: "N/A",
+    },
+    duration: {
+      type: String,
     },
   },
   { timestamps: true }
