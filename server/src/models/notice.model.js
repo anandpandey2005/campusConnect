@@ -9,6 +9,12 @@ const NoticeSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
+      required: [true, "notice missing"],
+    },
+    description: {
+      type: String,
+      trim: true,
+      lowercase: true,
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,

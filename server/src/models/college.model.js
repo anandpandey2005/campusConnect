@@ -4,6 +4,7 @@ import { Course } from "./course..js";
 import { Admin } from "./admin.model.js";
 import { Notice } from "./notice.model.js";
 import { Faculty } from "./faculty.model.js";
+import { Event } from "./event.model.js";
 
 const CollegeSchema = new Schema(
   {
@@ -99,6 +100,12 @@ const CollegeSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: Notice,
+      },
+    ],
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Event,
       },
     ],
   },
