@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
+import { College } from "./college.model.js";
 const AdminSchema = new Schema(
   {
     name: {
@@ -23,6 +23,11 @@ const AdminSchema = new Schema(
     password: {
       type: String,
       required: [true, "password missing"],
+    },
+    college: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "College",
+      required: [true, "college name missing"],
     },
   },
   { timestamps: true }

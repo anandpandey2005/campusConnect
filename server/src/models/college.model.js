@@ -43,7 +43,7 @@ const CollegeSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "passwrod missing"],
+      required: [true, "password missing"],
     },
     address: {
       line1: {
@@ -66,6 +66,18 @@ const CollegeSchema = new Schema(
         required: [true, "pincode missing"],
       },
     },
+    admins: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Admin",
+      },
+    ],
+    courses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
   },
   { timestamps: true }
 );

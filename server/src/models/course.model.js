@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
+import { College } from "./college.model.js";
 const CourseSchema = new Schema(
   {
     name: {
@@ -13,7 +13,7 @@ const CourseSchema = new Schema(
       ref: "College",
       required: [true, "College reference is required"],
     },
-    specialization: {
+    branch: {
       type: String,
       default: "N/A",
     },
