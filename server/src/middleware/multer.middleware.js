@@ -2,10 +2,8 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// ✅ Use project root
 const uploadPath = path.join(process.cwd(), "public/uploads");
 
-// ✅ Create folder if it doesn't exist
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
