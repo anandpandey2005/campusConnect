@@ -1,4 +1,9 @@
 import mongoose, { Schema } from "mongoose";
+import { Student } from "./student.model.js";
+import { Course } from "./course..js";
+import { Admin } from "./admin.model.js";
+import { Notice } from "./notice.model.js";
+import { Faculty } from "./faculty.model.js";
 
 const CollegeSchema = new Schema(
   {
@@ -66,16 +71,34 @@ const CollegeSchema = new Schema(
         required: [true, "pincode missing"],
       },
     },
-    admins: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
-      },
-    ],
     courses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
+        ref: Course,
+      },
+    ],
+    admins: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Admin,
+      },
+    ],
+    faculties: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Faculty,
+      },
+    ],
+    students: [
+      {
+        type: mongoose.Schema.type.ObjectId,
+        ref: Student,
+      },
+    ],
+    notices: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Notice,
       },
     ],
   },

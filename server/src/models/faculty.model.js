@@ -33,12 +33,12 @@ const FacultySchema = new Schema(
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "College",
+      ref: College,
       required: [true, "college name missing"],
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: Course,
       required: [true, "faculty branch name missing"],
     },
   },
