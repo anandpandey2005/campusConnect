@@ -25,12 +25,13 @@ const CollegeSchema = new Schema(
       lowercase: true,
       required: [true, "college name missing"],
     },
-    campus: {
+    university: {
       type: String,
-      lowercase: true,
       trim: true,
-      required: [true, "college campus missing"],
+      lowercase: true,
+      required: [true, "college university missing"],
     },
+
     website: {
       type: String,
       trim: true,
@@ -55,12 +56,12 @@ const CollegeSchema = new Schema(
       line1: {
         type: String,
         trim: true,
-        required: [true, "line 1 field missing"],
+        default: "",
       },
       line2: {
         type: String,
         trim: true,
-        required: [true, "line 2 field missing"],
+        default: "",
       },
       line3: {
         type: String,
@@ -69,7 +70,7 @@ const CollegeSchema = new Schema(
       pincode: {
         type: String,
         trim: true,
-        required: [true, "pincode missing"],
+        default: "",
       },
     },
     courses: [

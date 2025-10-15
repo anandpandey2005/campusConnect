@@ -1,0 +1,8 @@
+Scenario                Status Code	            Description     
+Success	                201                     Created	Data 
+Bad Request	            400                     Bad Request	
+Conflict	            409                     Conflict	
+Internal Server Error	500                     Internal Server Error	
+Unauthorized	        401                     Unauthorized	
+Forbidden	            403                     Forbidden	
+Not Found	            404                     Not Found	
