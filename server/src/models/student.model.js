@@ -93,6 +93,7 @@ const StudentSchema = new Schema(
       ref: Course,
       required: true,
     },
+    role: "student",
   },
   { timestamps: true }
 );

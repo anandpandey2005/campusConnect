@@ -29,6 +29,7 @@ const AdminSchema = new Schema(
       ref: College,
       required: [true, "college name missing"],
     },
+    role: "admin",
   },
   { timestamps: true }
 );
