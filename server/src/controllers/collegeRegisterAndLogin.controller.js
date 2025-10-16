@@ -1,7 +1,8 @@
 import { ApiResponse } from "../utils/apiResponse.utils.js";
 import { College } from "../models/college.model.js";
 import { is_valid_email } from "../utils/email_validator.utils.js";
-import mongoose from "mongoose";
+import { create_token } from "../utils/jsonwebtoken.utils.js";
+import bcrypt from "bcrypt";
 
 //############################# REGISTRATION ####################################
 export const College_register = async (req, res) => {
@@ -47,9 +48,27 @@ export const College_register = async (req, res) => {
 export const college_login = async (req, res) => {
   try {
     const { phonenumber, password } = req?.body || {};
-    if ((!phonenumber, !password)) {
+    if (!phonenumber || !password) {
       return ApiResponse.error(res, 400);
     }
+
+    const user = await College.findOne({ phonenumber }).lean();
+    const password_verified = await bcrypt.compare(password, user.password);
+
+    if (!user || !password_verified) {
+      return ApiResponse.error(res, "user or password invalid", 400);
+    }
+
+    const token = create_token({ _id: user._id, user: user, role: user.role });
+
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      // secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 1000 * 56,
+      sameSite: "strict",
+    });
+
+    return ApiResponse.success(res, user, "logged in successfully", 200);
   } catch {
     return ApiResponse.error(res);
   }

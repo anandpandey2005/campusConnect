@@ -110,6 +110,7 @@ const CollegeSchema = new Schema(
         ref: "Event",
       },
     ],
+    role: "superAdmin",
   },
   { timestamps: true }
 );
