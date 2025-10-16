@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 import { Student } from "./student.model.js";
-import { Course } from "./course..js";
+import { Course } from "./course.model.js";
 import { Admin } from "./admin.model.js";
 import { Notice } from "./notice.model.js";
 import { Faculty } from "./faculty.model.js";
 import { Event } from "./event.model.js";
+import bcrypt from "bcrypt";
 
 const CollegeSchema = new Schema(
   {
@@ -31,7 +32,6 @@ const CollegeSchema = new Schema(
       lowercase: true,
       required: [true, "college university missing"],
     },
-
     website: {
       type: String,
       trim: true,
@@ -66,6 +66,7 @@ const CollegeSchema = new Schema(
       line3: {
         type: String,
         trim: true,
+        default: "",
       },
       pincode: {
         type: String,
@@ -76,41 +77,53 @@ const CollegeSchema = new Schema(
     courses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Course,
+        ref: "Course",
       },
     ],
     admins: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Admin,
+        ref: "Admin",
       },
     ],
     faculties: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Faculty,
+        ref: "Faculty",
       },
     ],
     students: [
       {
-        type: mongoose.Schema.type.ObjectId,
-        ref: Student,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
       },
     ],
     notices: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Notice,
+        ref: "Notice",
       },
     ],
     events: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Event,
+        ref: "Event",
       },
     ],
   },
   { timestamps: true }
 );
+
+CollegeSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 export const College = mongoose.model("College", CollegeSchema);
