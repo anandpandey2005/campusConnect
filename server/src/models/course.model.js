@@ -10,7 +10,7 @@ const CourseSchema = new Schema(
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: College,
+      ref: "College",
       required: [true, "College reference is required"],
     },
     branch: {

@@ -25,7 +25,7 @@ const ProductPostSchema = new Schema(
     },
     posted_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Student,
+      ref: "Student",
     },
   },
   { timestamps: true }

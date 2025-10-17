@@ -85,12 +85,12 @@ const StudentSchema = new Schema(
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: College,
+      ref: "College",
       required: true,
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Course,
+      ref: "Course",
       required: true,
     },
     role: "student",
