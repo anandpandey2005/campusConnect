@@ -99,3 +99,4 @@ const StudentSchema = new Schema(
 );
 
 export const Student = mongoose.model("Student", StudentSchema);
+ 
