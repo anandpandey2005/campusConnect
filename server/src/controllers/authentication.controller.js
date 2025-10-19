@@ -51,7 +51,7 @@ export const super_admin_login = async (req, res) => {
   try {
     const { phonenumber, password } = req?.body || {};
     if (!phonenumber || !password) {
-      return ApiResponse.error(res, 400);
+      return ApiResponse.error(res, "all fields are  required", 400);
     }
 
     const user = await College.findOne({ phonenumber }).lean();
@@ -73,6 +73,33 @@ export const super_admin_login = async (req, res) => {
     return ApiResponse.success(res, user, "logged in successfully", 200);
   } catch (error) {
     return ApiResponse.error(res, error.message);
+  }
+};
+//#############################   ADMIN REGISTRATION  ############################
+export const admin_registration = async (req, res) => {
+  try {
+    const { employeeId, password } = req?.body || {};
+
+    if (!employeeId || !password) {
+      return ApiResponse.error(res, "All fields are required", 400);
+    }
+
+    const existingUser = await Faculty.findOne({ employeeId });
+    if (existingUser) {
+      return ApiResponse.error(res, "User already exists", 409);
+    }
+
+    const user_acknowledgement = await Faculty.create({
+      employeeId,
+      password,
+    });
+
+    const { password: _, ...data } = user_acknowledgement.toObject();
+
+    return ApiResponse.success(res, data, "Registered successfully", 201);
+  } catch (error) {
+    console.error("Admin registration error:", error);
+    return ApiResponse.error(res, "Internal Server Error", 500);
   }
 };
 
