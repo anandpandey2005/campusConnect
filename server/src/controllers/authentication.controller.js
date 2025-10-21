@@ -9,39 +9,61 @@ import bcrypt from "bcrypt";
 //############################# SuperAdmin  REGISTRATION ####################################
 export const super_admin_register = async (req, res) => {
   try {
-    // data destructering
     const { code, name, phoneNumber, email, password, university } = req?.body || {};
+
     if (!code || !name || !phoneNumber || !email || !password || !university) {
-      return ApiResponse.error(res, "all fields are  required", 400);
+      return ApiResponse.error(res, "All fields are required", 400);
     }
 
     if (!is_valid_email(email)) {
-      return ApiResponse.error(res, "email invalid !", 400);
+      return ApiResponse.error(res, "Invalid email format!", 400);
     }
 
-    // checking is SuperAdmin already exit if its  exits then please  return an error otherwise retrun registration acknowledgement
-    const is_already_registered = await SuperAdmin.findOne({
-      $and: [{ name }, { code }, { university }],
+    // Convert to lowercase for uniform matching
+    const normalizedData = {
+      code: code.trim().toLowerCase(),
+      name: name.trim().toLowerCase(),
+      university: university.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      phoneNumber: phoneNumber.trim(),
+    };
+
+    //Check duplicates individually for clarity
+    const [emailExists, phoneExists, nameUniversityExists] = await Promise.all([
+      SuperAdmin.findOne({ email: normalizedData.email }),
+      SuperAdmin.findOne({ phoneNumber: normalizedData.phoneNumber }),
+      SuperAdmin.findOne({
+        name: normalizedData.name,
+        university: normalizedData.university,
+      }),
+    ]);
+
+    if (emailExists) {
+      return ApiResponse.error(res, "already registered!", 409);
+    }
+    if (phoneExists) {
+      return ApiResponse.error(res, "already registered!", 409);
+    }
+    if (nameUniversityExists) {
+      return ApiResponse.error(res, "already registered for this university!", 409);
+    }
+
+    //Registration allowed for same 'code' if university is different
+    const register_acknowledgement = await SuperAdmin.create({
+      code: normalizedData.code,
+      name: normalizedData.name,
+      phoneNumber: normalizedData.phoneNumber,
+      email: normalizedData.email,
+      password,
+      university: normalizedData.university,
     });
 
-    if (is_already_registered) {
-      return ApiResponse.error(res, "SuperAdmin already registerd !", 409);
-    } else {
-      const register_acknowledgement = await SuperAdmin.create({
-        code,
-        name,
-        phoneNumber,
-        email,
-        password,
-        university,
-      });
+    // Exclude password before sending response
+    const { password: _, ...data } = register_acknowledgement.toObject();
 
-      const { password: _, ...data } = register_acknowledgement.toObject();
-
-      return ApiResponse.success(res, data, "registered succesfully", 200);
-    }
+    return ApiResponse.success(res, data, "Registered successfully", 201);
   } catch (error) {
-    return ApiResponse.error(res, error.message);
+    return ApiResponse.error(res, error.message || "Something went wrong", 500);
   }
 };
 
