@@ -21,12 +21,13 @@ const UserSchema = new Schema(
       trim: true,
     },
     dob: {
-      type: Date,
+      type: String,
       required: [true, "date must be non-empty"],
     },
     caste: {
       type: String,
       trim: true,
+      default: "n/a",
     },
     email: {
       type: String,
@@ -39,11 +40,12 @@ const UserSchema = new Schema(
       type: String,
       required: [true, "phone number must be non-empty"],
       trim: true,
+      unique: true,
     },
     password: {
       type: String,
       required: [true, "password must be non-empty"],
-      minlength: 6,
+      minlength: [6, "atleast six character"],
     },
     fatherName: {
       type: String,
@@ -67,7 +69,7 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      default: "student",
+      enum: ["user"],
     },
   },
   { timestamps: true }

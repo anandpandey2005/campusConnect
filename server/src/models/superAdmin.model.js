@@ -29,7 +29,7 @@ const SuperAdminSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-      required: [true, "college university must be non-empty"],
+      required: [true, "university must be non-empty"],
     },
     website: {
       type: String,
@@ -106,7 +106,7 @@ const SuperAdminSchema = new Schema(
     ],
     role: {
       type: String,
-      default: "SuperAdmin",
+      enum: ["superAdmin"],
     },
   },
   { timestamps: true }

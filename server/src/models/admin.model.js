@@ -1,4 +1,4 @@
-import mongoose, { mongo, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { SuperAdmin } from "./superAdmin.model.js";
 import { Course } from "./course.model.js";
 
@@ -39,6 +39,10 @@ const AdminSchema = new Schema(
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
+    },
+    role: {
+      type: String,
+      enum: ["admin"],
     },
   },
   { timestamps: true }
