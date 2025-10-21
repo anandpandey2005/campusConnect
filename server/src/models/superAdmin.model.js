@@ -1,56 +1,56 @@
 import mongoose, { Schema } from "mongoose";
-import { Student } from "./student.model.js";
+import { User } from "./user.model.js";
 import { Course } from "./course.model.js";
 import { Admin } from "./admin.model.js";
 import { Notice } from "./notice.model.js";
-import { Faculty } from "./faculty.model.js";
 import { Event } from "./event.model.js";
 import bcrypt from "bcrypt";
 
-const CollegeSchema = new Schema(
+const SuperAdminSchema = new Schema(
   {
     logo: {
       type: String,
       trim: true,
+      default: "",
     },
     code: {
       type: String,
       trim: true,
       lowercase: true,
-      required: [true, "college code missing"],
-      unique: true,
+      required: [true, "college code must be non-empty"],
     },
     name: {
       type: String,
       trim: true,
       lowercase: true,
-      required: [true, "college name missing"],
+      required: [true, "college name must be non-empty"],
     },
     university: {
       type: String,
       trim: true,
       lowercase: true,
-      required: [true, "college university missing"],
+      required: [true, "college university must be non-empty"],
     },
     website: {
       type: String,
       trim: true,
+      default: "",
     },
     email: {
       type: String,
       trim: true,
       unique: true,
-      required: [true, "email missing"],
+      required: [true, "email must be non-empty"],
     },
-    phonenumber: {
+    phoneNumber: {
       type: String,
       trim: true,
       unique: true,
-      required: [true, "phonenumber missing"],
+      required: [true, "phone number must be non-empty"],
     },
     password: {
       type: String,
-      required: [true, "password missing"],
+      required: [true, "password must be non-empty"],
     },
     address: {
       line1: {
@@ -86,16 +86,10 @@ const CollegeSchema = new Schema(
         ref: "Admin",
       },
     ],
-    faculties: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Faculty",
-      },
-    ],
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
+        ref: "User",
       },
     ],
     notices: [
@@ -110,12 +104,15 @@ const CollegeSchema = new Schema(
         ref: "Event",
       },
     ],
-    role: "superAdmin",
+    role: {
+      type: String,
+      default: "SuperAdmin",
+    },
   },
   { timestamps: true }
 );
 
-CollegeSchema.pre("save", async function (next) {
+SuperAdminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   try {
@@ -127,4 +124,4 @@ CollegeSchema.pre("save", async function (next) {
   }
 });
 
-export const College = mongoose.model("College", CollegeSchema);
+export const SuperAdmin = mongoose.model("SuperAdmin", SuperAdminSchema);

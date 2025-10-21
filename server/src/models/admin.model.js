@@ -1,35 +1,45 @@
-import mongoose, { Schema } from "mongoose";
-import { College } from "./college.model.js";
+import mongoose, { mongo, Schema } from "mongoose";
+import { SuperAdmin } from "./superAdmin.model.js";
+import { Course } from "./course.model.js";
+
 const AdminSchema = new Schema(
   {
     name: {
       type: String,
       lowercase: true,
-      required: [true, "name missing"],
       trim: true,
+      required: [true, "name must be non-empty"],
+    },
+    employeeId: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      required: [true, "employee id must be non-empty"],
     },
     email: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
+      required: [true, "email must be non-empty"],
     },
-    phonenumber: {
+    phoneNumber: {
       type: String,
       trim: true,
       unique: true,
-      required: [true, "phonumber missing"],
+      required: [true, "phonenumber must be non-empty"],
     },
     password: {
       type: String,
-      required: [true, "password missing"],
+      required: [true, "password must be non-empty"],
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "College",
-      required: [true, "college name missing"],
+      ref: "SuperAdmin",
     },
-    role: "admin",
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+    },
   },
   { timestamps: true }
 );

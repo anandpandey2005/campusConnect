@@ -16,6 +16,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+
+//#################### API END POINT MIDDLEWARE ################### 
 app.use("/api/v1/faculty", adminRoutes);
 app.use("/api/v1/faculty", facultyRoutes);
 app.use("/api/v1/student", studentRoutes);

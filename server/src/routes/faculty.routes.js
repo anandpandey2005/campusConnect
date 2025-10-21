@@ -1,4 +1,5 @@
 import express from "express";
+
 const facultyRoutes = express.Router();
 
 facultyRoutes.get("/profile", (req, res) => {

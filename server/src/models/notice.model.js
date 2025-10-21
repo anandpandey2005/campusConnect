@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { College } from "./college.model.js";
+import { SuperAdmin } from "./superAdmin.model.js";
 const NoticeSchema = new Schema(
   {
     refer_to: {
