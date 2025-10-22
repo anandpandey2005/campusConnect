@@ -107,6 +107,7 @@ const SuperAdminSchema = new Schema(
     role: {
       type: String,
       enum: ["superAdmin"],
+      default: "superAdmin",
     },
   },
   { timestamps: true }

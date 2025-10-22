@@ -3,7 +3,7 @@ import { SuperAdmin } from "../models/superAdmin.model.js";
 import { Admin } from "../models/admin.model.js";
 import { User } from "../models/user.model.js";
 import { is_valid_email } from "../utils/email_validator.utils.js";
-import { create_token } from "../utils/jsonwebtoken.utils.js";
+import { create_token, verify_token } from "../utils/jsonwebtoken.utils.js";
 import bcrypt from "bcrypt";
 
 //############################# SuperAdmin  REGISTRATION ####################################
@@ -19,7 +19,7 @@ export const super_admin_register = async (req, res) => {
       return ApiResponse.error(res, "Invalid email format!", 400);
     }
 
-    // Convert to lowercase for uniform matching
+    // Convert to lowercase for match
     const normalizedData = {
       code: code.trim().toLowerCase(),
       name: name.trim().toLowerCase(),
@@ -28,7 +28,7 @@ export const super_admin_register = async (req, res) => {
       phoneNumber: phoneNumber.trim(),
     };
 
-    //Check duplicates individually for clarity
+    //Check duplicates individually
     const [emailExists, phoneExists, nameUniversityExists] = await Promise.all([
       SuperAdmin.findOne({ email: normalizedData.email }),
       SuperAdmin.findOne({ phoneNumber: normalizedData.phoneNumber }),
@@ -48,7 +48,7 @@ export const super_admin_register = async (req, res) => {
       return ApiResponse.error(res, "already registered for this university!", 409);
     }
 
-    //Registration allowed for same 'code' if university is different
+    //Registration allowed for same code if university is different
     const register_acknowledgement = await SuperAdmin.create({
       code: normalizedData.code,
       name: normalizedData.name,
@@ -309,5 +309,77 @@ export const User_login = async (req, res) => {
     return ApiResponse.success(res, data, "logged in succesfully", 200);
   } catch (error) {
     return ApiResponse.error(res, error.message);
+  }
+};
+
+//####################### logout ######################
+export const logout = (req, res) => {
+  try {
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
+
+    return ApiResponse.success(res, "logout successfully", 200);
+  } catch (error) {
+    return ApiResponse.error(res, error.message || "internal server error", 500);
+  }
+};
+
+//#################################### delete account ############################################
+export const deleteAccount = async (req, res) => {
+  try {
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
+
+    const { password } = req?.body || {};
+    if (!token) return ApiResponse.error(res, "Unauthorized: Token missing", 401);
+    if (!password) return ApiResponse.error(res, "Password is required", 400);
+
+    const decoded = verify_token({ token });
+    const userId = decoded._id;
+    const role = decoded.role;
+
+    if (!userId || !role) {
+      return ApiResponse.error(res, "Invalid or expired token", 401);
+    }
+
+    let Model;
+    switch (role) {
+      case "superAdmin":
+        Model = SuperAdmin;
+        break;
+      case "admin":
+        Model = Admin;
+        break;
+      case "user":
+        Model = User;
+        break;
+      default:
+        return ApiResponse.error(res, "Invalid user role", 400);
+    }
+
+    const user = await Model.findById(userId);
+    if (!user) {
+      return ApiResponse.error(res, "User not found", 404);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return ApiResponse.error(res, "Invalid password", 401);
+    }
+
+    await Model.findByIdAndDelete(userId);
+
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
+
+    return ApiResponse.success(res, "Account deleted successfully", 200);
+  } catch (error) {
+    console.error("Delete account error:", error);
+    return ApiResponse.error(res, error.message || "Internal Server Error", 500);
   }
 };
