@@ -337,7 +337,7 @@ export const User_login = async (req, res) => {
       return ApiResponse.error(res, "invalid user or password", 400);
     }
 
-    const password_verified = await bcrypt.compare(this.password, user.password);
+    const password_verified = bcrypt.compare(password, user.password);
     if (!password_verified) {
       return ApiResponse.error(res, "invalid user or password", 400);
     }
