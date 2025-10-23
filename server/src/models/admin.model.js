@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { SuperAdmin } from "./superAdmin.model.js";
 import { Course } from "./course.model.js";
-
+import bcrypt from "bcrypt";
 const AdminSchema = new Schema(
   {
     name: {
@@ -48,5 +48,16 @@ const AdminSchema = new Schema(
   },
   { timestamps: true }
 );
+
+AdminSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 export const Admin = mongoose.model("Admin", AdminSchema);

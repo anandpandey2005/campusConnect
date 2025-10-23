@@ -206,22 +206,69 @@ export const admin_login = async (req, res) => {
   }
 };
 //#############################   User REGISTRATION  ############################
-export const User_registration = async (req, res) => {
+export const single_user_registration = async (req, res) => {
   try {
-    const { admissionNumber, password } = req?.body || {};
+    const {
+      fullName,
+      admissionNumber,
+      password,
+      dob,
+      email,
+      phoneNumber,
+      fatherName,
+      motherName,
+      college,
+      course,
+    } = req?.body || {};
 
-    if (!admissionNumber || !password) {
+    if (
+      !admissionNumber ||
+      !password ||
+      !fullName ||
+      !dob ||
+      !email ||
+      !phoneNumber ||
+      !fatherName ||
+      !motherName ||
+      !college ||
+      !course
+    ) {
       return ApiResponse.error(res, "All fields are required", 400);
     }
 
-    const existingUser = await Admin.findOne({ admissionNumber });
-    if (existingUser) {
-      return ApiResponse.error(res, "User already exists", 409);
+    const normalizedData = {
+      admissionNumber: admissionNumber.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      phoneNumber: phoneNumber.trim().toLowerCase(),
+    };
+
+    const [admissionNumberExists, emailExists, phoneNumberExists] = await Promise.all([
+      User.findOne({ admissionNumber: normalizedData.admissionNumber }),
+      User.findOne({ email: normalizedData.email }),
+      User.findOne({ phoneNumber: normalizedData.phoneNumber }),
+    ]);
+
+    if (admissionNumberExists) {
+      return ApiResponse.error(res, "admission number already exists", 409);
+    }
+    if (emailExists) {
+      return ApiResponse.error(res, "email already exists", 409);
+    }
+    if (phoneNumberExists) {
+      return ApiResponse.error(res, "phone number already exists", 409);
     }
 
     const user_acknowledgement = await User.create({
-      admission_number: admissionNumber,
+      fullName,
+      admissionNumber,
       password,
+      dob,
+      email,
+      phoneNumber,
+      fatherName,
+      motherName,
+      college,
+      course,
     });
 
     const { password: _, ...data } = user_acknowledgement.toObject();

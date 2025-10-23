@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { SuperAdmin } from "./superAdmin.model.js";
 import { Course } from "./course.model.js";
+import bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
   {
@@ -9,6 +10,7 @@ const UserSchema = new Schema(
       required: [true, "admission nunber  must be non-empty"],
       unique: true,
       trim: true,
+      lowercase: true,
     },
     enrollmentNumber: {
       type: String,
@@ -19,9 +21,10 @@ const UserSchema = new Schema(
       type: String,
       required: [true, "name must be non-empty"],
       trim: true,
+      lowercase: true,
     },
     dob: {
-      type: String,
+      type: Date,
       required: [true, "date must be non-empty"],
     },
     caste: {
@@ -70,10 +73,20 @@ const UserSchema = new Schema(
     role: {
       type: String,
       enum: ["user"],
-      default  : "user",
+      default: "user",
     },
   },
   { timestamps: true }
 );
 
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 export const User = mongoose.model("User", UserSchema);
