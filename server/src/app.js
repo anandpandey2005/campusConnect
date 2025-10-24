@@ -21,7 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/superAdmin", superAdminRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/user", userRoutes);
-// app.post("/uploads", upload.single("file"), file_upload);
 
 app.get("", (req, res) => {
   res.send("hello");
