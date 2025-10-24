@@ -5,6 +5,7 @@ import { Admin } from "./admin.model.js";
 import { Notice } from "./notice.model.js";
 import { Event } from "./event.model.js";
 import bcrypt from "bcrypt";
+import { file_upload } from "../utils/cloudinary.utils.js";
 
 const SuperAdminSchema = new Schema(
   {
@@ -128,8 +129,25 @@ const SuperAdminSchema = new Schema(
     ],
     notices: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Notice",
+        noticeId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Notice",
+        },
+        title: {
+          type: String,
+          lowercase: true,
+          trim: true,
+        },
+        link: {
+          type: String,
+          default: "#",
+          trim: true,
+        },
+        file: {
+          type: String,
+          default: "#",
+          trim: true,
+        },
       },
     ],
     events: [

@@ -2,8 +2,10 @@ import mongoose, { Schema } from "mongoose";
 import { SuperAdmin } from "./superAdmin.model.js";
 const NoticeSchema = new Schema(
   {
-    refer_to: {
+    link: {
       type: String,
+      default: "#",
+      trim: true,
     },
     title: {
       type: String,
@@ -15,6 +17,11 @@ const NoticeSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
+    },
+    file: {
+      type: String,
+      default: "#",
+      trim: true,
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,

@@ -26,7 +26,7 @@ const uploadToCloudinary = async (localPath) => {
 export const file_upload = async (req, res, next) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded!" });
+      return next();
     }
 
     const localPath = req.file.path;
@@ -48,7 +48,7 @@ export const file_upload = async (req, res, next) => {
     if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
 
     req.file.cloudinaryUrl = cloudinaryUrl;
-    console.log(cloudinaryUrl);
+
     next();
   } catch (error) {
     console.error("Upload Middleware Error:", error);
