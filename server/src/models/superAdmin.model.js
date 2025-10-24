@@ -76,8 +76,25 @@ const SuperAdminSchema = new Schema(
     },
     courses: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
+        courseId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Course",
+          required: true,
+        },
+        name: {
+          type: String,
+          trim: true,
+          lowercase: true,
+          required: [true, "Course name is required"],
+        },
+        branch: {
+          type: String,
+          default: "N/A",
+        },
+        duration: {
+          type: String,
+          required: [true, "duration must non empty"], // timeline of course let  example btech- 4years bca - 3year and etc..
+        },
       },
     ],
     admins: [

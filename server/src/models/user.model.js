@@ -30,7 +30,7 @@ const UserSchema = new Schema(
     caste: {
       type: String,
       trim: true,
-      default: "n/a",
+      default: "N/A",
     },
     email: {
       type: String,

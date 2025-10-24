@@ -43,8 +43,18 @@ export const add_course = async (req, res) => {
 
     const added = await SuperAdmin.updateOne(
       { _id: superAdminId },
-      { $push: { courses: newCourse._id } }
+      {
+        $push: {
+          courses: {
+            courseId: newCourse._id,
+            name: newCourse.name,
+            branch: newCourse.branch,
+            duration: newCourse.duration,
+          },
+        },
+      }
     );
+
     if (!added) {
       return ApiResponse.error(res);
     }
