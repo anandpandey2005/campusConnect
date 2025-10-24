@@ -6,6 +6,7 @@ const EventSchema = new Schema(
     image: {
       type: String,
       trim: true,
+      default: "#",
     },
     title: {
       type: String,
@@ -15,10 +16,12 @@ const EventSchema = new Schema(
     description: {
       type: String,
       trim: true,
+      lowercase: true,
     },
     link: {
       type: String,
       trim: true,
+      lowercase: true,
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,

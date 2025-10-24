@@ -1,6 +1,7 @@
 import { SuperAdmin } from "../../models/superAdmin.model.js";
 import { ApiResponse } from "../../utils/apiResponse.utils.js";
 import { verify_token } from "../../utils/jsonwebtoken.utils.js";
+
 //####################### GET DETAILS ########################
 export const get_superAdmin_profile_details = async (req, res) => {
   try {

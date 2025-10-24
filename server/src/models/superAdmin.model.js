@@ -152,8 +152,22 @@ const SuperAdminSchema = new Schema(
     ],
     events: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        eventId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Event",
+        },
+        title: {
+          type: String,
+          default: "N/A",
+          trim: true,
+          lowercase: true,
+        },
+        link: {
+          type: String,
+          default: "#",
+          trim: true,
+          lowercase: true,
+        },
       },
     ],
     role: {
