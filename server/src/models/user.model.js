@@ -65,11 +65,24 @@ const UserSchema = new Schema(
       ref: "SuperAdmin",
       required: [true, "college must be non-empty"],
     },
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
-      required: [true, "course  must be non-empty"],
-    },
+    course: [
+      {
+        courseId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Course",
+          required: [true, "course  must be non-empty"],
+        },
+        name: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
+        branch: {
+          type: String,
+          lowercase: true,
+        },
+      },
+    ],
     role: {
       type: String,
       enum: ["user"],

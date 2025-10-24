@@ -105,8 +105,25 @@ const SuperAdminSchema = new Schema(
     ],
     students: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        studentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        fullName: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
+        course: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
+        branch: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
       },
     ],
     notices: [

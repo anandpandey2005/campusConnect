@@ -5,6 +5,7 @@ import { User } from "../models/user.model.js";
 import { is_valid_email } from "../utils/email_validator.utils.js";
 import { create_token, verify_token } from "../utils/jsonwebtoken.utils.js";
 import bcrypt from "bcrypt";
+import { decode } from "jsonwebtoken";
 
 //############################# SuperAdmin  REGISTRATION ####################################
 export const super_admin_register = async (req, res) => {
@@ -217,7 +218,6 @@ export const single_user_registration = async (req, res) => {
       phoneNumber,
       fatherName,
       motherName,
-      college,
       course,
     } = req?.body || {};
 
@@ -230,46 +230,72 @@ export const single_user_registration = async (req, res) => {
       !phoneNumber ||
       !fatherName ||
       !motherName ||
-      !college ||
       !course
     ) {
       return ApiResponse.error(res, "All fields are required", 400);
     }
 
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
+
+    if (!token) return ApiResponse.error(res, "Unauthorized", 401);
+
     const normalizedData = {
       admissionNumber: admissionNumber.trim().toLowerCase(),
       email: email.trim().toLowerCase(),
       phoneNumber: phoneNumber.trim().toLowerCase(),
+      course: course.trim().toLowerCase(),
     };
 
-    const [admissionNumberExists, emailExists, phoneNumberExists] = await Promise.all([
-      User.findOne({ admissionNumber: normalizedData.admissionNumber }),
-      User.findOne({ email: normalizedData.email }),
-      User.findOne({ phoneNumber: normalizedData.phoneNumber }),
-    ]);
+    const [admissionNumberExists, emailExists, phoneNumberExists, courseExists] = await Promise.all(
+      [
+        User.findOne({ admissionNumber: normalizedData.admissionNumber }),
+        User.findOne({ email: normalizedData.email }),
+        User.findOne({ phoneNumber: normalizedData.phoneNumber }),
+        SuperAdmin.findOne({ "courses.name": normalizedData.course }),
+      ]
+    );
 
-    if (admissionNumberExists) {
-      return ApiResponse.error(res, "admission number already exists", 409);
-    }
-    if (emailExists) {
-      return ApiResponse.error(res, "email already exists", 409);
-    }
-    if (phoneNumberExists) {
-      return ApiResponse.error(res, "phone number already exists", 409);
-    }
+    if (admissionNumberExists)
+      return ApiResponse.error(res, "Admission number already exists", 409);
+    if (emailExists) return ApiResponse.error(res, "Email already exists", 409);
+    if (phoneNumberExists) return ApiResponse.error(res, "Phone number already exists", 409);
+    if (!courseExists) return ApiResponse.error(res, "Invalid course", 400);
+
+    const decoded = verify_token({ token });
+    const superAdminId = decoded._id;
+
+    const superAdminExists = await SuperAdmin.findById(superAdminId);
+    if (!superAdminExists) return ApiResponse.error(res, "Unauthorized", 401);
 
     const user_acknowledgement = await User.create({
       fullName,
-      admissionNumber,
+      admissionNumber: normalizedData.admissionNumber,
       password,
       dob,
-      email,
-      phoneNumber,
+      email: normalizedData.email,
+      phoneNumber: normalizedData.phoneNumber,
       fatherName,
       motherName,
-      college,
-      course,
+      college: superAdminId,
+      course: {
+        courseId: courseExists._id,
+        name: courseExists.name,
+        branch: courseExists.branch,
+      },
     });
+
+    await SuperAdmin.updateOne(
+      { _id: superAdminId },
+      {
+        $push: {
+          students: {
+            studentId: user_acknowledgement._id,
+            fullName: user_acknowledgement.fullName,
+            course: course,
+          },
+        },
+      }
+    );
 
     const { password: _, ...data } = user_acknowledgement.toObject();
 
