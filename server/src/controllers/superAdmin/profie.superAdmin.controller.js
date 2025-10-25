@@ -21,3 +21,4 @@ export const get_superAdmin_profile_details = async (req, res) => {
     return ApiResponse.error(res, "internal server error" || error.message, 500);
   }
 };
+

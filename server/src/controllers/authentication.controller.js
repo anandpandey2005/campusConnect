@@ -6,15 +6,18 @@ import { is_valid_email } from "../utils/email_validator.utils.js";
 import { create_token, verify_token } from "../utils/jsonwebtoken.utils.js";
 import bcrypt from "bcrypt";
 import { decode } from "jsonwebtoken";
+import { upload } from "../middleware/multer.middleware.js";
 
 //############################# SuperAdmin  REGISTRATION ####################################
 export const super_admin_register = async (req, res) => {
   try {
     const { code, name, phoneNumber, email, password, university } = req?.body || {};
-
     if (!code || !name || !phoneNumber || !email || !password || !university) {
       return ApiResponse.error(res, "All fields are required", 400);
     }
+    const logo =
+      req?.file?.cloudinaryUrl ||
+      "https://res.cloudinary.com/dxela17ca/image/upload/v1761381058/Your_paragraph_text-removebg-preview_znntme.png";
 
     if (!is_valid_email(email)) {
       return ApiResponse.error(res, "Invalid email format!", 400);
@@ -51,6 +54,7 @@ export const super_admin_register = async (req, res) => {
 
     //Registration allowed for same code if university is different
     const register_acknowledgement = await SuperAdmin.create({
+      logo,
       code: normalizedData.code,
       name: normalizedData.name,
       phoneNumber: normalizedData.phoneNumber,

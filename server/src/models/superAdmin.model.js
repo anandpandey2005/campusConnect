@@ -12,7 +12,8 @@ const SuperAdminSchema = new Schema(
     logo: {
       type: String,
       trim: true,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dxela17ca/image/upload/v1761381058/Your_paragraph_text-removebg-preview_znntme.png",
     },
     code: {
       type: String,
