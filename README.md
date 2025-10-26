@@ -26,6 +26,8 @@ The goal of Campus Connect is to create a unified ecosystem where students, admi
 ---
 
 ## Project Structure (Backend)
+
+```md
 server/
 │
 ├── public/uploads # Uploaded files
