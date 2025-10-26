@@ -30,20 +30,20 @@ The goal of Campus Connect is to create a unified ecosystem where students, admi
 ```md
 server/
 │
-├── public/uploads # Uploaded files
+├── public/uploads  Uploaded files
 ├── src/
-│ ├── config/ # Configuration files (DB, Cloudinary, etc.)
+│ ├── config/  Configuration files (DB, Cloudinary, etc.)
 │ ├── controllers/
-│ │ ├── admin/ # Admin-level controllers
-│ │ ├── superAdmin/ # Super Admin logic
-│ │ └── user/ # User operations (Profile, Auth, Update)
-│ ├── middleware/ # Custom middlewares
-│ ├── models/ # Database models
-│ ├── routes/ # API route definitions
-│ └── utils/ # Helper and utility functions
+│ │ ├── admin/  Admin-level controllers
+│ │ ├── superAdmin/  Super Admin logic
+│ │ └── user/  User operations (Profile, Auth, Update)
+│ ├── middleware/  Custom middlewares
+│ ├── models/  Database models
+│ ├── routes/  API route definitions
+│ └── utils/  Helper and utility functions
 │
-├── app.js # Express app entry point
-├── index.js # Server startup
-├── .env # Environment variables
-├── package.json # Dependencies and scripts
-└── statuslog.txt # Status tracking and logs
+├── app.js  Express app entry point
+├── index.js  Server startup
+├── .env  Environment variables
+├── package.json  Dependencies and scripts
+└── statuslog.txt  Status tracking and logs
