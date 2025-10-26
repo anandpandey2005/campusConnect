@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { SuperAdmin } from "./superAdmin.model.js";
-import { Course } from "./course.model.js";
 import bcrypt from "bcrypt";
+
 const AdminSchema = new Schema(
   {
     name: {
@@ -14,6 +13,7 @@ const AdminSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
+      unique: true,
       required: [true, "employee id must be non-empty"],
     },
     email: {
@@ -26,7 +26,7 @@ const AdminSchema = new Schema(
       type: String,
       trim: true,
       unique: true,
-      required: [true, "phonenumber must be non-empty"],
+      required: [true, "phone number must be non-empty"],
     },
     password: {
       type: String,
@@ -36,10 +36,21 @@ const AdminSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "SuperAdmin",
     },
-    course: {
+    department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
+      required: [true, "department must be non-empty"],
     },
+    subjects: [
+      {
+        subject: {
+          type: String,
+          required: [true, "appointed subject must be non-empty"],
+          lowercase: true,
+          trim: true,
+        },
+      },
+    ],
     role: {
       type: String,
       enum: ["admin"],

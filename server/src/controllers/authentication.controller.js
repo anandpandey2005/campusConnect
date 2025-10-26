@@ -105,28 +105,84 @@ export const super_admin_login = async (req, res) => {
 //#############################   ADMIN REGISTRATION  ############################
 export const admin_registration = async (req, res) => {
   try {
-    const { employeeId, password } = req?.body || {};
+    const { name, employeeId, email, phoneNumber, password, department, subjects } =
+      req?.body || {};
 
-    if (!employeeId || !password) {
+    if (
+      !name ||
+      !employeeId ||
+      !email ||
+      !phoneNumber ||
+      !password ||
+      !department ||
+      !subjects?.length
+    ) {
       return ApiResponse.error(res, "All fields are required", 400);
     }
 
-    const existingUser = await Admin.findOne({ employeeId });
-    if (existingUser) {
-      return ApiResponse.error(res, "User already exists", 409);
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
+    if (!token) return ApiResponse.error(res, "Unauthorized", 401);
+
+    const decoded = verify_token({ token });
+    const superAdminId = decoded._id;
+
+    const superAdminExists = await SuperAdmin.findById(superAdminId);
+    if (!superAdminExists) {
+      return ApiResponse.error(res, "Unauthorized or invalid SuperAdmin", 401);
     }
 
-    const user_acknowledgement = await Admin.create({
-      employee_id: employeeId,
+    const normalizedData = {
+      employeeId: employeeId.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      phoneNumber: phoneNumber.trim(),
+    };
+
+    const [idExists, emailExists, phoneExists] = await Promise.all([
+      Admin.findOne({ employeeId: normalizedData.employeeId }),
+      Admin.findOne({ email: normalizedData.email }),
+      Admin.findOne({ phoneNumber: normalizedData.phoneNumber }),
+    ]);
+
+    if (idExists) return ApiResponse.error(res, "Employee ID already exists", 409);
+    if (emailExists) return ApiResponse.error(res, "Email already exists", 409);
+    if (phoneExists) return ApiResponse.error(res, "Phone number already exists", 409);
+
+    const departmentMatch = superAdminExists.courses.find(
+      (course) => course.name.toLowerCase() === department.trim().toLowerCase()
+    );
+
+    if (!departmentMatch) return ApiResponse.error(res, "Invalid department name", 400);
+
+    const admin_acknowledgement = await Admin.create({
+      name: name.trim(),
+      employeeId: normalizedData.employeeId,
+      email: normalizedData.email,
+      phoneNumber: normalizedData.phoneNumber,
       password,
+      college: superAdminId,
+      department: departmentMatch.courseId,
+      subjects: subjects.map((sub) => ({ subject: sub.trim().toLowerCase() })),
     });
 
-    const { password: _, ...data } = user_acknowledgement.toObject();
+    await SuperAdmin.updateOne(
+      { _id: superAdminId },
+      {
+        $push: {
+          admins: {
+            adminId: admin_acknowledgement._id,
+            name: admin_acknowledgement.name,
+            department: departmentMatch.name,
+            employeeId: admin_acknowledgement.employeeId,
+          },
+        },
+      }
+    );
 
-    return ApiResponse.success(res, data, "Registered successfully", 201);
+    const { password: _, ...data } = admin_acknowledgement.toObject();
+    return ApiResponse.success(res, data, "Admin registered successfully", 201);
   } catch (error) {
-    console.error("Admin registration error:", error);
-    return ApiResponse.error(res, "Internal Server Error", 500);
+    console.error("Admin registration error:", error.message);
+    return ApiResponse.error(res, error.message || "Internal Server Error", 500);
   }
 };
 //#############################   MANY ADMIN REGISTRATION  ############################

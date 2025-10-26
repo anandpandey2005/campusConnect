@@ -101,8 +101,25 @@ const SuperAdminSchema = new Schema(
     ],
     admins: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
+        adminId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Admin",
+        },
+        name: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
+        department: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
+        employeeId: {
+          type: String,
+          trim: true,
+          lowercase: true,
+        },
       },
     ],
     students: [
