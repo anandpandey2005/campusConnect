@@ -128,7 +128,7 @@ export const admin_registration = async (req, res) => {
 
     const superAdminExists = await SuperAdmin.findById(superAdminId);
     if (!superAdminExists) {
-      return ApiResponse.error(res, "Unauthorized or invalid SuperAdmin", 401);
+      return ApiResponse.error(res, "Unauthorized", 401);
     }
 
     const normalizedData = {
@@ -148,10 +148,10 @@ export const admin_registration = async (req, res) => {
     if (phoneExists) return ApiResponse.error(res, "Phone number already exists", 409);
 
     const departmentMatch = superAdminExists.courses.find(
-      (course) => course.name.toLowerCase() === department.trim().toLowerCase()
+      (course) => course.name.trim().toLowerCase() === department.trim().toLowerCase()
     );
 
-    if (!departmentMatch) return ApiResponse.error(res, "Invalid department name", 400);
+    if (!departmentMatch) return ApiResponse.error(res, "unexpectd department", 400);
 
     const admin_acknowledgement = await Admin.create({
       name: name.trim(),
