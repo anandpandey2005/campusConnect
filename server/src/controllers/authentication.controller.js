@@ -80,8 +80,11 @@ export const super_admin_login = async (req, res) => {
     if (!phoneNumber || !password) {
       return ApiResponse.error(res, "all fields must be non-empty", 400);
     }
-
+    console.log(password);
     const user = await SuperAdmin.findOne({ phoneNumber }).lean();
+    if (!user) {
+      return ApiResponse.error(res, "No data exists", 404);
+    }
     const password_verified = await bcrypt.compare(password, user.password);
 
     if (!user || !password_verified) {
@@ -236,12 +239,12 @@ export const admin_login = async (req, res) => {
     const { employeeId, password } = req?.body || {};
 
     if (!employeeId || !password) {
-      return ApiResponse.error(res, "Invalid user or password", 400);
+      return ApiResponse.error(res, "all credientials are required", 400);
     }
 
     const user = await Admin.findOne({ employeeId }).lean();
     if (!user) {
-      return ApiResponse.error(res, "Invalid user or password", 400);
+      return ApiResponse.error(res, "data not exists", 404);
     }
 
     const password_verified = await bcrypt.compare(password, user.password);

@@ -13,6 +13,10 @@ import { file_upload } from "../utils/cloudinary.utils.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { add_event } from "../controllers/superAdmin/events.superAdmin.controller.js";
 import { get_any_profile } from "../controllers/profileUpdate.controller.js";
+import {
+  campusConnect_add,
+  campusConnect_getAll,
+} from "../controllers/campusConnect.controller.js";
 //#################### CONSTANT ##########################
 const superAdminRoutes = express.Router();
 
@@ -27,5 +31,12 @@ superAdminRoutes.post("/push-notice", upload.single("file"), file_upload, push_n
 superAdminRoutes.post("/add-event", upload.single("file"), file_upload, add_event);
 superAdminRoutes.post("/logout", logout);
 superAdminRoutes.post("/deleteAccount", deleteAccount);
+superAdminRoutes.post(
+  "/campus-connect-add-gallery",
+  upload.single("file"),
+  file_upload,
+  campusConnect_add
+);
+superAdminRoutes.get("/campus-connect-all", campusConnect_getAll);
 
 export { superAdminRoutes };
