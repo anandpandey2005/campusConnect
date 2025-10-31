@@ -3,11 +3,11 @@ import './App.css';
 import {
   NotFound,
   Login,
-  Registration,
   Home,
   User,
   SuperAdmin,
   Admin,
+  Register,
 } from './handlers/pageHandler.js';
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
             </>
           }
         />
-        <Route path="/register" element={<Registration />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/superAdmin" element={<SuperAdmin />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/User" element={<User />} />

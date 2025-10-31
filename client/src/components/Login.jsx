@@ -5,7 +5,6 @@ import axios from 'axios';
 export default function Login() {
   const navigate = useNavigate();
 
-  // ===== STATE MANAGEMENT =====
   const [formData, setFormData] = useState({
     phoneNumber: '',
     password: '',
@@ -16,13 +15,13 @@ export default function Login() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // ===== HANDLE INPUT CHANGE =====
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // ===== HANDLE LOGIN SUBMIT =====
+  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -30,22 +29,28 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://your-api-url.com/api/auth/login', formData, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+      // ✅ Adjusted API URL
+      const res = await axios.post(
+        'http://localhost:2000/api/auth/login',
+        formData,
+        { withCredentials: true } // ✅ Important to receive HttpOnly cookie
+      );
 
-      if (response.data.success) {
-        setSuccess('Login successful! Redirecting...');
-        localStorage.setItem('token', response.data.token);
+      if (res.data?.success) {
+        setSuccess('✅ Logged in successfully!');
+        localStorage.setItem('user', JSON.stringify(res.data.data.user));
 
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // Optional: if you also return token in response, save it
+        // localStorage.setItem("token", res.data.data.token);
 
-        setTimeout(() => navigate('/dashboard'), 1500);
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1500);
       } else {
-        setError(response.data.message || 'Login failed. Try again!');
+        setError(res.data?.message || 'Login failed. Try again!');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Server error. Please try again.');
+      setError(err.response?.data?.message || '❌ Server error. Try again!');
     } finally {
       setLoading(false);
     }
@@ -58,14 +63,16 @@ export default function Login() {
 
       {/* Login Card */}
       <div className="relative z-10 backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-[90%] max-w-md text-white">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          Welcome Back to <span className="text-yellow-300">Campus Connect</span>
+        <h2 className="text-3xl font-bold text-center">Welcome Back to</h2>
+        <h2 className="text-3xl font-bold text-center mb-2">
+          <span className="text-yellow-300">Campus Connect</span>
         </h2>
+
         <p className="text-center text-gray-200 mb-8 text-sm">
           Login to continue exploring your smart college network
         </p>
 
-        <form className="space-y-5" onSubmit={handleSubmit} method="post">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Phone Number */}
           <div>
             <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
@@ -78,6 +85,7 @@ export default function Login() {
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="Enter your phone number"
+              required
               className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
@@ -94,6 +102,7 @@ export default function Login() {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
+              required
               className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
@@ -108,12 +117,14 @@ export default function Login() {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              required
+              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="">-- Select Role --</option>
-              <option value="superAdmin">Super Admin</option>
-              <option value="admin">Admin</option>
-              <option value="student">Student</option>
+              {/* ✅ Match exact role cases with backend */}
+              <option value="SuperAdmin">Super Admin</option>
+              <option value="Admin">Admin</option>
+              <option value="User">User</option>
             </select>
           </div>
 

@@ -350,7 +350,6 @@ export const login = async (req, res) => {
     if (!phoneNumber || !password || !role) {
       return ApiResponse.error(res, "All credentials are required", 400);
     }
-
     let Model;
     switch (role) {
       case "SuperAdmin":
@@ -380,8 +379,8 @@ export const login = async (req, res) => {
 
     const token = create_token({
       _id: user._id,
+      user: userData,
       role: user.role,
-      phoneNumber: user.phoneNumber,
     });
 
     res.cookie("authToken", token, {
