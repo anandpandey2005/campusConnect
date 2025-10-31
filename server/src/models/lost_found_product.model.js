@@ -1,34 +1,70 @@
 import mongoose, { Schema } from "mongoose";
-import { Student } from "./student.model.js";
+import { User } from "./user.model.js";
 
-const ProductPostSchema = new Schema(
+const LostFoundProductSchema = new Schema(
   {
     image: {
       type: String,
       trim: true,
+      default: "https://res.cloudinary.com/dxela17ca/image/upload/v1761718278/nocontent_pv8nwh.png",
     },
     title: {
       type: String,
       trim: true,
-      required: [true, "title missing"],
+      required: [true, "Title must not be empty"],
     },
     description: {
       type: String,
       trim: true,
+      default: "",
     },
-    tags: [{ type: string, trim: true, lowercase: true }],
-    status: ["open", "close"],
-    handhover_to: {
+    venue: {
       type: String,
       trim: true,
-      lowercase: true,
+      required: [true, "Venue must not be empty"],
     },
-    posted_by: {
+    dateTime: {
+      type: Date,
+      required: [true, "Date and time must not be empty"],
+      default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ["open", "closed"],
+      default: "open",
+    },
+    contact: {
+      type: String,
+      trim: true,
+      default: "N/A",
+    },
+    handoverTo: {
+      type: String,
+      trim: true,
+      default: "N/A",
+    },
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      required: [true, "Posted by reference is required"],
+      refPath: "createdByModel",
+    },
+    createdByModel: {
+      type: String,
+      required: true,
+      enum: ["User", "Admin", "SuperAdmin"],
+    },
+    branch: {
+      type: String,
+      trim: true,
+      default: "N/A",
+    },
+    tag: {
+      type: String,
+      trim: true,
+      default: "Lost Item",
     },
   },
   { timestamps: true }
 );
 
-export const ProductPost = mongoose.model("ProductPost", ProductPostSchema);
+export const LostFoundProduct = mongoose.model("LostFoundProduct", LostFoundProductSchema);

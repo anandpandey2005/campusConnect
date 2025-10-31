@@ -6,7 +6,7 @@ import { is_valid_email } from "../utils/email_validator.utils.js";
 import { create_token, verify_token } from "../utils/jsonwebtoken.utils.js";
 import bcrypt from "bcrypt";
 
-//############################# SuperAdmin  REGISTRATION ####################################
+//############################# SUPERADMIN  REGISTRATION ####################################
 export const super_admin_register = async (req, res) => {
   try {
     const { code, name, phoneNumber, email, password, university } = req?.body || {};
@@ -397,7 +397,7 @@ export const login = async (req, res) => {
   }
 };
 
-//####################### logout ######################
+//####################### LOGOUT ######################
 export const logout = (req, res) => {
   try {
     res.clearCookie("authToken", {
@@ -412,7 +412,50 @@ export const logout = (req, res) => {
   }
 };
 
-//#################################### delete account ############################################
+//################################### GET PROFILE ####################################################
+export const get_profile = async (req, res) => {
+  try {
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return ApiResponse.error(res, "Unauthorized", 401);
+    }
+
+    const decoded = verify_token({ token });
+    const { _id, role } = decoded;
+
+    let model;
+
+    switch (role) {
+      case "user":
+        model = User;
+        break;
+      case "admin":
+        model = Admin;
+        break;
+      case "superAdmin":
+        model = SuperAdmin;
+        break;
+      default:
+        return ApiResponse.error(res, "Invalid role in token", 400);
+    }
+
+    const user = await model.findById(_id).lean();
+
+    if (!user) {
+      return ApiResponse.error(res, "User not found", 404);
+    }
+
+    const { password, ...data } = user;
+
+    return ApiResponse.success(res, data, "Fetched details successfully", 200);
+  } catch (error) {
+    console.error(error);
+    return ApiResponse.error(res, error.message || "Internal server error", 500);
+  }
+};
+
+//#################################### DELETE ACCOUNT ############################################
 export const deleteAccount = async (req, res) => {
   try {
     const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];

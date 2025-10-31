@@ -5,26 +5,26 @@ import cors from "cors";
 import { superAdminRoutes } from "./routes/superAdmin.routes.js";
 import { adminRoutes } from "./routes/admin.routes.js";
 import { userRoutes } from "./routes/user.routes.js";
-import { upload } from "./middleware/multer.middleware.js";
-import { file_upload } from "./utils/cloudinary.utils.js";
-import { authenticationRoute } from "./routes/authentication.js";
+import { authRoute } from "./routes/auth.js";
 
-//##################### CONSTANT ############################
+//################################# CONSTANT ############################
 const app = express();
 
-//################### MIDDLEWARE ##########################
+//################################# MIDDLEWARE ##########################
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-//#################### API END POINT MIDDLEWARE ###################
+//########################### API END POINT MIDDLEWARE ###################
 app.use("/api/v1/superAdmin", superAdminRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/user", userRoutes);
-app.use("/api/auth", authenticationRoute);
+app.use("/api/auth", authRoute);
 
-app.get("", (req, res) => {
-  res.send("hello");
+app.get("/", (req, res) => {
+  res.send("Server Working");
 });
+
+//######################### EXPORT VARIABLE (REFRENCE) ##################
 export { app };

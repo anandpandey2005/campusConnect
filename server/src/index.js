@@ -7,8 +7,6 @@ dotenv.config();
 //##################### CONSTANT ############################
 const PORT = process.env.PORT || 5000;
 
-// tagline of this software
-// No more searching classrooms – just connect on CampusConnect.
 
 ///################## SERVER CALL FUNCTION  ################################
 async function startServer() {

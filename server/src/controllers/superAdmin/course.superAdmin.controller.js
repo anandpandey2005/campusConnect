@@ -6,20 +6,23 @@ import { verify_token } from "../../utils/jsonwebtoken.utils.js";
 //############################ ADD COURSE ##################################
 export const add_course = async (req, res) => {
   try {
+    const token =
+      req?.cookies?.authToken ||
+      (req?.headers?.authorization ? req.headers.authorization.split(" ")[1] : null);
+
+    if (!token) {
+      return ApiResponse.error(res, "Unauthorized access ", 401);
+    }
+
+    const decoded = verify_token({ token });
+    if (!decoded || !decoded._id || !decoded.role) {
+      return ApiResponse.error(res, "Unauthorized access", 401);
+    }
+
     const { name, branch, duration } = req?.body || {};
 
     if (!name || !duration) {
       return ApiResponse.error(res, "name and duration must be non-empty", 400);
-    }
-
-    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return new ApiResponse.error(res, "Unauthorized: Token missing", 401);
-    }
-
-    const decoded = verify_token({ token });
-    if (!decoded || !decoded._id) {
-      return ApiResponse.error(res, "Unauthorized: Invalid token", 401);
     }
 
     const superAdminId = decoded._id;
