@@ -1,7 +1,6 @@
 import express from "express";
 import {
   super_admin_register,
-  super_admin_login,
   logout,
   deleteAccount,
   single_user_registration,
@@ -22,15 +21,12 @@ const superAdminRoutes = express.Router();
 
 //#################### API END POINT ######################
 superAdminRoutes.post("/registration", upload.single("file"), file_upload, super_admin_register);
-superAdminRoutes.post("/login", super_admin_login);
 superAdminRoutes.post("/single-admin-registration", admin_registration);
 superAdminRoutes.post("/single-user-registration", single_user_registration);
 superAdminRoutes.post("/get-profile-details", get_any_profile);
 superAdminRoutes.post("/add-course", add_course);
 superAdminRoutes.post("/push-notice", upload.single("file"), file_upload, push_notice);
 superAdminRoutes.post("/add-event", upload.single("file"), file_upload, add_event);
-superAdminRoutes.post("/logout", logout);
-superAdminRoutes.post("/deleteAccount", deleteAccount);
 superAdminRoutes.post(
   "/campus-connect-add-gallery",
   upload.single("file"),

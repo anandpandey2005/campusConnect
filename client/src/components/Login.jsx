@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
 
   // ===== STATE MANAGEMENT =====
   const [formData, setFormData] = useState({
-    phoneNumber: "",
-    password: "",
-    role: "",
+    phoneNumber: '',
+    password: '',
+    role: '',
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   // ===== HANDLE INPUT CHANGE =====
   const handleChange = (e) => {
@@ -25,30 +25,27 @@ export default function Login() {
   // ===== HANDLE LOGIN SUBMIT =====
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://your-api-url.com/api/auth/login", 
-        formData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post('https://your-api-url.com/api/auth/login', formData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
 
       if (response.data.success) {
-        setSuccess("Login successful! Redirecting...");
-        localStorage.setItem("token", response.data.token); 
+        setSuccess('Login successful! Redirecting...');
+        localStorage.setItem('token', response.data.token);
 
-      
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem('user', JSON.stringify(response.data.user));
 
-        setTimeout(() => navigate("/dashboard"), 1500); 
+        setTimeout(() => navigate('/dashboard'), 1500);
       } else {
-        setError(response.data.message || "Login failed. Try again!");
+        setError(response.data.message || 'Login failed. Try again!');
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      setError(err.response?.data?.message || 'Server error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -126,11 +123,11 @@ export default function Login() {
             disabled={loading}
             className={`w-full py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${
               loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-yellow-400 text-gray-900 hover:bg-yellow-500"
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-yellow-400 text-gray-900 hover:bg-yellow-500'
             }`}
           >
-            {loading ? "Logging in..." : "Login →"}
+            {loading ? 'Logging in...' : 'Login →'}
           </button>
 
           {/* Error / Success Messages */}
@@ -140,7 +137,7 @@ export default function Login() {
           {/* Extra Links */}
           <div className="text-center mt-4">
             <p className="text-sm text-gray-200">
-              Don’t have an account?{" "}
+              Don’t have an account?{' '}
               <Link to="/register" className="text-yellow-300 hover:text-yellow-400 font-medium">
                 Register
               </Link>

@@ -5,8 +5,6 @@ import { User } from "../models/user.model.js";
 import { is_valid_email } from "../utils/email_validator.utils.js";
 import { create_token, verify_token } from "../utils/jsonwebtoken.utils.js";
 import bcrypt from "bcrypt";
-import { decode } from "jsonwebtoken";
-import { upload } from "../middleware/multer.middleware.js";
 
 //############################# SuperAdmin  REGISTRATION ####################################
 export const super_admin_register = async (req, res) => {
@@ -32,7 +30,6 @@ export const super_admin_register = async (req, res) => {
       phoneNumber: phoneNumber.trim(),
     };
 
-    //Check duplicates individually
     const [emailExists, phoneExists, nameUniversityExists] = await Promise.all([
       SuperAdmin.findOne({ email: normalizedData.email }),
       SuperAdmin.findOne({ phoneNumber: normalizedData.phoneNumber }),
@@ -72,39 +69,6 @@ export const super_admin_register = async (req, res) => {
   }
 };
 
-// ########################### SuperAdmin LOGIN #################################
-
-export const super_admin_login = async (req, res) => {
-  try {
-    const { phoneNumber, password } = req?.body || {};
-    if (!phoneNumber || !password) {
-      return ApiResponse.error(res, "all fields must be non-empty", 400);
-    }
-    console.log(password);
-    const user = await SuperAdmin.findOne({ phoneNumber }).lean();
-    if (!user) {
-      return ApiResponse.error(res, "No data exists", 404);
-    }
-    const password_verified = await bcrypt.compare(password, user.password);
-
-    if (!user || !password_verified) {
-      return ApiResponse.error(res, "user or password invalid", 400);
-    }
-
-    const token = create_token({ _id: user._id, user: user, role: user.role });
-
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 1000 * 56,
-      sameSite: "strict",
-    });
-
-    return ApiResponse.success(res, user, "logged in successfully", 200);
-  } catch (error) {
-    return ApiResponse.error(res, error.message);
-  }
-};
 //#############################   ADMIN REGISTRATION  ############################
 export const admin_registration = async (req, res) => {
   try {
@@ -233,42 +197,6 @@ export const many_admin_registration = async (req, res) => {
   }
 };
 
-//#############################   ADMIN LOGIN ############################
-export const admin_login = async (req, res) => {
-  try {
-    const { employeeId, password } = req?.body || {};
-
-    if (!employeeId || !password) {
-      return ApiResponse.error(res, "all credientials are required", 400);
-    }
-
-    const user = await Admin.findOne({ employeeId }).lean();
-    if (!user) {
-      return ApiResponse.error(res, "data not exists", 404);
-    }
-
-    const password_verified = await bcrypt.compare(password, user.password);
-    if (!password_verified) {
-      return ApiResponse.error(res, "Invalid user or password", 400);
-    }
-
-    const { password: _, ...data } = user;
-
-    const token = create_token({ _id: user._id, user: data, role: user.role });
-
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 1000 * 56,
-      sameSite: "strict",
-    });
-
-    return ApiResponse.success(res, { user: data }, "Login successful", 200);
-  } catch (error) {
-    console.error("Admin login error:", error.message);
-    return ApiResponse.error(res, "Server error", 500);
-  }
-};
 //#############################   User REGISTRATION  ############################
 export const single_user_registration = async (req, res) => {
   try {
@@ -413,38 +341,60 @@ export const many_User_registration = async (req, res) => {
   }
 };
 
-// ############################# User LOGIN ############################
-export const User_login = async (req, res) => {
+//##################################### LOGIN ######################################################
+
+export const login = async (req, res) => {
   try {
-    const { admissionNumber, password } = req?.body || {};
-    if (!admissionNumber || !password) {
-      return ApiResponse.error(res, "all credentials are  required", 400);
+    const { phoneNumber, password, role } = req.body || {};
+
+    if (!phoneNumber || !password || !role) {
+      return ApiResponse.error(res, "All credentials are required", 400);
     }
 
-    const user = await User.findOne({ admissionNumber }).lean();
+    let Model;
+    switch (role) {
+      case "SuperAdmin":
+        Model = SuperAdmin;
+        break;
+      case "Admin":
+        Model = Admin;
+        break;
+      case "User":
+        Model = User;
+        break;
+      default:
+        return ApiResponse.error(res, "Invalid role specified", 400);
+    }
+
+    const user = await Model.findOne({ phoneNumber });
     if (!user) {
-      return ApiResponse.error(res, "invalid user or password", 400);
+      return ApiResponse.error(res, "Phone number or password is incorrect", 401);
     }
 
-    const password_verified = bcrypt.compare(password, user.password);
-    if (!password_verified) {
-      return ApiResponse.error(res, "invalid user or password", 400);
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return ApiResponse.error(res, "Phone number or password is incorrect", 401);
     }
 
-    const { password: _, ...data } = user;
+    const { password: _, ...userData } = user.toObject();
 
-    const token = create_token({ _id: user._id, user: data, role: user.role });
+    const token = create_token({
+      _id: user._id,
+      role: user.role,
+      phoneNumber: user.phoneNumber,
+    });
 
     res.cookie("authToken", token, {
       httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 1000 * 56,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       sameSite: "strict",
     });
 
-    return ApiResponse.success(res, data, "logged in succesfully", 200);
+    return ApiResponse.success(res, { user: userData }, "Logged in successfully", 200);
   } catch (error) {
-    return ApiResponse.error(res, error.message);
+    console.error("Login Error:", error);
+    return ApiResponse.error(res, "Internal Server Error", 500);
   }
 };
 
