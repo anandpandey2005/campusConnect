@@ -17,7 +17,7 @@ export const lost_found_product = async (req, res) => {
       return ApiResponse.error(res, "Unauthorized access ", 401);
     }
 
-    const decoded = verify_token(token);
+    const decoded = verify_token({ token });
     if (!decoded || !decoded._id || !decoded.role) {
       return ApiResponse.error(res, "Unauthorized access", 401);
     }
@@ -71,5 +71,33 @@ export const lost_found_product = async (req, res) => {
     return ApiResponse.success(res, newPost, "Lost & Found item created successfully", 201);
   } catch (error) {
     return ApiResponse.error(res, error.message || "Something went wrong", 500);
+  }
+};
+
+// ################################# GET LOST FOUND PRODUCT #######################
+
+export const get_lost_found_product = async (req, res) => {
+  try {
+    const token =
+      req?.cookies?.authToken ||
+      (req?.headers?.authorization ? req?.headers?.authorization.split(" ")[1] : null);
+
+    if (!token) {
+      return ApiResponse.error(res, "Unauthorized access", 401);
+    }
+
+    const decoded = verify_token({ token });
+    if (!decoded || !decoded._id || !decoded.role) {
+      return ApiResponse.error(res, "Unauthorized access", 401);
+    }
+
+    const data = await LostFoundProduct.find().lean();
+    if (!data || data.length === 0) {
+      return ApiResponse.error(res, "No product", 404);
+    }
+
+    return ApiResponse.success(res, data, "products fetched successfully", 200);
+  } catch (error) {
+    return ApiResponse.error(res);
   }
 };

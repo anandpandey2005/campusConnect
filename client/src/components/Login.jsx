@@ -59,13 +59,13 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-700 via-purple-700 to-blue-600 relative overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1')] bg-cover bg-center opacity-30"></div>
+      <div className="absolute inset-0 bg-[url('campuConnectRegisterPage.png')] bg-cover bg-center opacity-30"></div>
 
       {/* Login Card */}
       <div className="relative z-10 backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-[90%] max-w-md text-white">
         <h2 className="text-3xl font-bold text-center">Welcome Back to</h2>
         <h2 className="text-3xl font-bold text-center mb-2">
-          <span className="text-yellow-300">Campus Connect</span>
+          <Link  to={"/"} ><span className="text-yellow-300">Campus Connect</span></Link>
         </h2>
 
         <p className="text-center text-gray-200 mb-8 text-sm">

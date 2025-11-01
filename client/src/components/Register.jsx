@@ -52,7 +52,7 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-800 via-purple-700 to-blue-700 relative overflow-hidden">
       {/* Background overlay */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644')] bg-cover bg-center opacity-30"></div>
+      <div className="absolute inset-0 bg-[url('campuConnectRegisterPage.png')] bg-cover bg-center opacity-30"></div>
 
       {/* Floating glow effects */}
       <div className="absolute top-10 left-10 w-24 h-24 bg-yellow-400/20 rounded-full blur-2xl animate-pulse"></div>
@@ -61,7 +61,10 @@ export default function Register() {
       {/* Register Card */}
       <div className="relative z-10 backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-[90%] max-w-md text-white">
         <h2 className="text-3xl font-bold text-center mb-1">
-          Join <span className="text-yellow-300">Campus Connect</span>
+          Join{' '}
+          <Link to={'/'}>
+            <span className="text-yellow-300">Campus Connect</span>
+          </Link>
         </h2>
         <p className="text-center text-gray-200 mb-8 text-sm">
           Register now to empower your university digitally
