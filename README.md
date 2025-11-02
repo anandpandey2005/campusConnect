@@ -12,7 +12,7 @@ This is my first publicly accessible full-stack project, built with a clean and 
 The goal of Campus Connect is to create a unified ecosystem where students, administrators, and universities can connect effortlessly — enabling profile management, authentication, document uploads, and efficient admin supervision.
 
 ---
-
+https://.postman.co/workspace/My-Workspace~451e9438-e0ea-44e5-8191-681494f8c55c/collection/37758472-a62f89a7-4f71-4744-8f27-a2cdc1bd8c50?action=share&creator=37758472&active-environment=37758472-f495b44c-3de4-4a7d-894d-95028c4b06ca
 ### Tech Stack
 
 - Node.js – Runtime environment  
