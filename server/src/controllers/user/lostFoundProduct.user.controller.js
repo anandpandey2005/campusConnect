@@ -126,7 +126,7 @@ export const delete_lost_found_product = async (req, res) => {
       return ApiResponse.error(res, "uncought error", 400);
     }
 
-    return ApiResponse.success(res, "deleted", 200);
+    return ApiResponse.success(res, "successfully deleted", 200);
   } catch (error) {
     return ApiResponse.error(res, error.message || "internal server error");
   }
