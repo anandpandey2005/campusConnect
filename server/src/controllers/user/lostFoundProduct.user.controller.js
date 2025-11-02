@@ -12,7 +12,6 @@ export const lost_found_product = async (req, res) => {
     const token =
       req?.cookies?.authToken ||
       (req?.headers?.authorization ? req.headers.authorization.split(" ")[1] : null);
-
     if (!token) {
       return ApiResponse.error(res, "Unauthorized access ", 401);
     }
@@ -21,22 +20,24 @@ export const lost_found_product = async (req, res) => {
     if (!decoded || !decoded._id || !decoded.role) {
       return ApiResponse.error(res, "Unauthorized access", 401);
     }
+    console.log(decoded.role);
+    console.log("to3");
 
     let Model;
     switch (decoded.role) {
-      case "SuperAdmin":
+      case "superAdmin":
         Model = SuperAdmin;
         break;
-      case "Admin":
+      case "admin":
         Model = Admin;
         break;
-      case "User":
+      case "user":
         Model = User;
         break;
       default:
-        return ApiResponse.error(res, "Invalid role in token", 400);
+        return ApiResponse.error(res, "unauthorized access", 401);
     }
-
+    console.log("top4");
     const creator = await Model.findById(decoded._id);
     if (!creator) {
       return ApiResponse.error(res, "User not found", 404);
@@ -99,5 +100,34 @@ export const get_lost_found_product = async (req, res) => {
     return ApiResponse.success(res, data, "products fetched successfully", 200);
   } catch (error) {
     return ApiResponse.error(res);
+  }
+};
+
+//######################## DELETE LOST AND FOUND PRODUCT ##################
+
+export const delete_lost_found_product = async (req, res) => {
+  try {
+    const token =
+      req?.cookies?.authToken ||
+      (req?.headers?.authorization ? req?.headers?.authorization.split(" ")[1] : null);
+
+    if (!token) {
+      return ApiResponse.error(res, "unauthirized access", 409);
+    }
+
+    const { _id } = req?.body || {};
+
+    if (!_id) {
+      return ApiResponse.error(res, "try again later", 404);
+    }
+
+    const product_acknowledgement = await LostFoundProduct.findByIdAndDelete(_id);
+    if (!product_acknowledgement) {
+      return ApiResponse.error(res, "uncought error", 400);
+    }
+
+    return ApiResponse.success(res, "deleted", 200);
+  } catch (error) {
+    return ApiResponse.error(res, error.message || "internal server error");
   }
 };

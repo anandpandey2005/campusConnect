@@ -51,18 +51,20 @@ const LostFoundProductSchema = new Schema(
     createdByModel: {
       type: String,
       required: true,
-      enum: ["User", "Admin", "SuperAdmin"],
+      enum: ["user", "admin", "superAdmin"],
     },
     branch: {
       type: String,
       trim: true,
       default: "N/A",
     },
-    tag: {
-      type: String,
-      trim: true,
-      default: "Lost Item",
-    },
+    tag: [
+      {
+        type: String,
+        trim: true,
+        default: "Lost Item",
+      },
+    ],
   },
   { timestamps: true }
 );

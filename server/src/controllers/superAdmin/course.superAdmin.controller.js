@@ -33,6 +33,16 @@ export const add_course = async (req, res) => {
       return ApiResponse.error(res, "Unauthorized", 401);
     }
 
+    let courseExists = superAdminExists.courses.find((check) => {
+      if (check.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+        return true;
+      }
+    });
+
+    if (courseExists) {
+      return ApiResponse.error(res, "already Exists", 409);
+    }
+
     const newCourse = await Course.create({
       name,
       branch,

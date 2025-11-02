@@ -65,7 +65,9 @@ export default function Login() {
       <div className="relative z-10 backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-[90%] max-w-md text-white">
         <h2 className="text-3xl font-bold text-center">Welcome Back to</h2>
         <h2 className="text-3xl font-bold text-center mb-2">
-          <Link  to={"/"} ><span className="text-yellow-300">Campus Connect</span></Link>
+          <Link to={'/'}>
+            <span className="text-yellow-300">Campus Connect</span>
+          </Link>
         </h2>
 
         <p className="text-center text-gray-200 mb-8 text-sm">

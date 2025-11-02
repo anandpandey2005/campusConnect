@@ -7,7 +7,6 @@ dotenv.config();
 //##################### CONSTANT ############################
 const PORT = process.env.PORT || 5000;
 
-
 ///################## SERVER CALL FUNCTION  ################################
 async function startServer() {
   try {
