@@ -16,6 +16,7 @@ const UserSchema = new Schema(
       type: String,
       unique: true,
       trim: true,
+      default: "N/A",
     },
     fullName: {
       type: String,

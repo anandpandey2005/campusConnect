@@ -8,16 +8,18 @@ import {
   FaHandshake,
   FaRobot,
 } from 'react-icons/fa';
+``;
+import { Footer } from '../components';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col items-center">
       {/* ================= HERO SECTION ================= */}
 
-      <section className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center text-white overflow-hidden bg-gradient-to-r from-indigo-800 via-purple-700 to-blue-700">
+      <section className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center text-white overflow-hidden bg-linear-to-r from-indigo-800 via-purple-700 to-blue-700 border border-none rounded-b-xl sm:rounded-b-[10%] ">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[url('/campusConnectHome.png')] bg-cover bg-center opacity-40"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/40 to-black/80"></div>
         </div>
 
         {/* Content */}
@@ -130,7 +132,7 @@ export default function Home() {
       </section>
 
       {/* ================= CTA SECTION ================= */}
-      <section className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 text-center">
+      <section className="w-full bg-linear-to-r from-blue-600 to-indigo-700 text-white py-20 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Revolutionize Your Campus?</h2>
         <p className="max-w-2xl mx-auto mb-8 text-gray-100 text-lg">
           Join thousands of students and educators already connected through
@@ -143,6 +145,7 @@ export default function Home() {
           Register Now →
         </Link>
       </section>
+      <Footer></Footer>
     </div>
   );
 }

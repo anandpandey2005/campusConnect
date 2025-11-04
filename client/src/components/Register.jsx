@@ -50,7 +50,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-800 via-purple-700 to-blue-700 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-indigo-800 via-purple-700 to-blue-700 relative overflow-hidden">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-[url('campuConnectRegisterPage.png')] bg-cover bg-center opacity-30"></div>
 

@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// NOTE: Since this is a single file, we use standard Tailwind animations. 
+// If you need custom animations like 'animate-bounce-slow', you would typically define them in a global CSS file.
+
 export default function Login() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     phoneNumber: '',
     password: '',
-    role: '',
+    role: 'user', 
   });
 
   const [loading, setLoading] = useState(false);
@@ -17,11 +19,10 @@ export default function Login() {
 
   // Handle input change
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle submit
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -29,137 +30,138 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // ✅ Adjusted API URL
       const res = await axios.post(
         'http://localhost:2000/api/auth/login',
-        formData,
-        { withCredentials: true } // ✅ Important to receive HttpOnly cookie
+        {
+          phoneNumber: formData.phoneNumber,
+          password: formData.password,
+          role: formData.role.toLowerCase(),
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
       );
 
-      if (res.data?.success) {
-        setSuccess('✅ Logged in successfully!');
-        localStorage.setItem('user', JSON.stringify(res.data.data.user));
+      if (res.data.success) {
+        setSuccess('Login successful!');
+        // NOTE: In a production app, use Firestore/secure storage, not localStorage.
+        localStorage.setItem('user', JSON.stringify(res.data.data.user)); 
 
-        // Optional: if you also return token in response, save it
-        // localStorage.setItem("token", res.data.data.token);
-
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1500);
+        const userRole = res.data.data.user.role?.toLowerCase();
+        if (userRole === 'superadmin') navigate('/superadmin');
+        else if (userRole === 'admin') navigate('/admin');
+        else navigate('/user');
       } else {
-        setError(res.data?.message || 'Login failed. Try again!');
+        setError(res.data.message || 'Login failed. Try again!');
       }
     } catch (err) {
-      setError(err.response?.data?.message || '❌ Server error. Try again!');
+      console.error('Login Error:', err.response);
+      setError(
+        err.response?.data?.message || `Server error: ${err.message}. Check console for details.`
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-700 via-purple-700 to-blue-600 relative overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('campuConnectRegisterPage.png')] bg-cover bg-center opacity-30"></div>
+    // Outer Container: Matched Gradient Background
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-indigo-800 via-purple-700 to-blue-700 relative overflow-hidden p-4">
+      
+      {/* Background overlay (Placeholder image removed, using texture simulation for stability) */}
+      <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"rgba(255,255,255,0.05)\" /></svg>')" }}></div>
 
-      {/* Login Card */}
-      <div className="relative z-10 backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-[90%] max-w-md text-white">
-        <h2 className="text-3xl font-bold text-center">Welcome Back to</h2>
-        <h2 className="text-3xl font-bold text-center mb-2">
-          <Link to={'/'}>
-            <span className="text-yellow-300">Campus Connect</span>
-          </Link>
+      {/* Floating glow effects (Matched to Register.jsx) */}
+      <div className="absolute top-10 left-10 w-24 h-24 bg-yellow-400/20 rounded-full blur-2xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-16 w-32 h-32 bg-indigo-400/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+
+      {/* Login Card: Frosted Glass Effect (Matched to Register.jsx) */}
+      <div className="relative z-10 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 w-full max-w-md text-white transition-all duration-300 hover:shadow-yellow-400/50">
+        
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Welcome Back to <span className="text-yellow-300">Campus Connect</span>
         </h2>
 
-        <p className="text-center text-gray-200 mb-8 text-sm">
-          Login to continue exploring your smart college network
-        </p>
-
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Phone Number */}
+          
+          {/* Phone Number Input */}
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
-              Phone Number
-            </label>
+            <label className="block text-sm mb-1 text-gray-200">Phone Number</label>
             <input
-              type="tel"
-              id="phoneNumber"
+              type="text"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
-              placeholder="Enter your phone number"
+              placeholder="Enter phone number"
+              // Input Styling: Matched translucent background and Yellow focus ring
+              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 placeholder-gray-300 text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all duration-300"
               required
-              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* Password */}
+          {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
+            <label className="block text-sm mb-1 text-gray-200">Password</label>
             <input
               type="password"
-              id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="Enter password"
+              // Input Styling: Matched translucent background and Yellow focus ring
+              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 placeholder-gray-300 text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all duration-300"
               required
-              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* Role Selection */}
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium mb-1">
-              Select Role
-            </label>
+          {/* Role Select */}
+          <div className="relative">
+            <label className="block text-sm mb-1 text-gray-200">Role</label>
             <select
-              id="role"
               name="role"
               value={formData.role}
               onChange={handleChange}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              // Input Styling: Matched translucent background and Yellow focus ring
+              className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none appearance-none cursor-pointer transition-all duration-300"
             >
-              <option value="">-- Select Role --</option>
-              {/* ✅ Match exact role cases with backend */}
-              <option value="SuperAdmin">Super Admin</option>
-              <option value="Admin">Admin</option>
-              <option value="User">User</option>
+              <option value="user" className="bg-indigo-800 text-white">Student</option>
+              <option value="admin" className="bg-indigo-800 text-white">Staff</option>
+              <option value="superadmin" className="bg-indigo-800 text-white">College Admin</option>
             </select>
+            {/* Custom chevron icon */}
+            <div className="absolute inset-y-0 right-0 top-6 flex items-center px-4 pointer-events-none text-gray-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Login Button: Matched Yellow Accent Button */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${
+            className={`w-full py-3 rounded-xl font-bold text-lg transition duration-300 shadow-xl transform hover:scale-[1.01] active:scale-[0.99] ${
               loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-yellow-400 text-gray-900 hover:bg-yellow-500'
+                ? 'bg-gray-400 text-gray-800 cursor-not-allowed'
+                : 'bg-yellow-400 text-gray-900 hover:bg-yellow-300 hover:shadow-yellow-400/60'
             }`}
           >
-            {loading ? 'Logging in...' : 'Login →'}
+            {loading ? 'Authenticating...' : 'Login →'}
           </button>
-
-          {/* Error / Success Messages */}
-          {error && <p className="text-red-400 text-center text-sm mt-2">{error}</p>}
-          {success && <p className="text-green-400 text-center text-sm mt-2">{success}</p>}
-
-          {/* Extra Links */}
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-200">
-              Don’t have an account?{' '}
-              <Link to="/register" className="text-yellow-300 hover:text-yellow-400 font-medium">
-                Register
-              </Link>
-            </p>
-            <p className="text-sm text-gray-300 mt-2 hover:text-yellow-300 cursor-pointer">
-              Forgot Password?
-            </p>
-          </div>
         </form>
+
+        {/* Messages */}
+        {error && <p className="text-red-300 text-center font-medium mt-6 p-3 bg-red-900/30 border border-red-700 rounded-lg">{error}</p>}
+        {success && <p className="text-green-300 text-center font-medium mt-6 p-3 bg-green-900/30 border border-green-700 rounded-lg">{success}</p>}
+
+        {/* Register Link */}
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-300">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-yellow-300 hover:text-yellow-400 font-medium">
+              Register Now
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

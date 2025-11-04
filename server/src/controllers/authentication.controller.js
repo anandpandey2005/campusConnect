@@ -415,9 +415,10 @@ export const logout = (req, res) => {
 //################################### GET PROFILE ####################################################
 export const get_profile = async (req, res) => {
   try {
-    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
+    const token = req?.cookies?.authToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
+      console.log("here error occur");
       return ApiResponse.error(res, "Unauthorized", 401);
     }
 
@@ -447,7 +448,6 @@ export const get_profile = async (req, res) => {
     }
 
     const { password, ...data } = user;
-
     return ApiResponse.success(res, data, "Fetched details successfully", 200);
   } catch (error) {
     console.error(error);

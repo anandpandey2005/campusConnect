@@ -8,6 +8,7 @@ import {
   SuperAdmin,
   Admin,
   Register,
+  Test,
 } from './handlers/pageHandler.js';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/superAdmin" element={<SuperAdmin />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/User" element={<User />} />
+        <Route path="/test" element={<Test />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -10,7 +10,7 @@ import { upload } from "../middleware/multer.middleware.js";
 
 const userRoutes = express.Router();
 
-userRoutes.post("/get-profile-details", get_profile);
+userRoutes.get("/get-profile-details", get_profile);
 userRoutes.post("/add-lostFoundProduct", upload.single("file"), file_upload, lost_found_product);
 userRoutes.get("/get-lostFoundProduct", get_lost_found_product);
 userRoutes.delete("/delete-lostFoundProduct", delete_lost_found_product);
