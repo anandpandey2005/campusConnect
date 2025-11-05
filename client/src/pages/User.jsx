@@ -1,20 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Footer, LostFoundProduct, UserProfile } from '../components';
+import EventCard from '../components/EventCard'; // ✅ import EventCard
 
 export default function User() {
-  // Hardcoded profile data for development/mocking purposes.
-  // We wrap the raw user data inside a 'data' property and add 'success: true'
-  // to match the expected API response structure used by the UserProfile component.
-
   const [products, setProducts] = useState([]);
+  const [events, setEvents] = useState([]); // ✅ Added
   const [seenLost, setSeenLost] = useState(0);
   const [seenFound, setSeenFound] = useState(0);
   const lostRef = useRef(null);
   const foundRef = useRef(null);
 
-  // --- 1. User Profile Data Loading (Commented out API fetch) ---
-
+  // --- 1️⃣ USER PROFILE ---
   const [profileData, setProfileData] = useState(null);
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -31,7 +28,7 @@ export default function User() {
     fetchUserProfile();
   }, []);
 
-  // --- 2. Fetch Lost & Found Products (Existing Logic) ---
+  // --- 2️⃣ LOST & FOUND ---
   useEffect(() => {
     const fetchLostFoundProducts = async () => {
       try {
@@ -46,14 +43,28 @@ export default function User() {
     fetchLostFoundProducts();
   }, []);
 
-  // --- Scroll progress tracker (Existing Logic) ---
+  // --- 3️⃣ EVENTS FETCH ---
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await axios.get('http://localhost:2000/api/v1/user/get-event-details', {
+          withCredentials: true,
+        });
+        setEvents(res.data.data || []);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  // --- SCROLL LOGIC (unchanged) ---
   const handleScroll = (ref, setSeen) => {
     if (!ref.current) return;
     const container = ref.current;
     const cards = container.querySelectorAll('.product-item');
     const scrollTop = container.scrollTop;
 
-    // Safety check for empty cards array
     if (cards.length === 0) {
       setSeen(0);
       return;
@@ -64,13 +75,11 @@ export default function User() {
 
     cards.forEach((card) => {
       const rect = card.getBoundingClientRect();
-      // Check if the card is mostly visible within the scroll container
       if (rect.bottom <= parentRect.bottom && rect.top >= parentRect.top - 20) {
         count++;
       }
     });
 
-    // Simple estimation of "seen" items
     const cardHeight = cards[0]?.offsetHeight || 150;
     const cardsScrolled = Math.floor(scrollTop / (cardHeight + 20));
     setSeen(Math.min(cardsScrolled + count, cards.length));
@@ -80,14 +89,12 @@ export default function User() {
     const lost = lostRef.current;
     const found = foundRef.current;
 
-    // Helper function to handle event attachment/detachment
     const scrollHandlerLost = () => handleScroll(lostRef, setSeenLost);
     const scrollHandlerFound = () => handleScroll(foundRef, setSeenFound);
 
     if (lost) lost.addEventListener('scroll', scrollHandlerLost);
     if (found) found.addEventListener('scroll', scrollHandlerFound);
 
-    // Initial check
     scrollHandlerLost();
     scrollHandlerFound();
 
@@ -97,21 +104,19 @@ export default function User() {
     };
   }, [products]);
 
-  // --- Component Render ---
+  // --- 4️⃣ RENDER ---
   return (
     <div className="max-w-[1500px] mx-auto px-4 md:px-6 overflow-hidden bg-white">
-      {/* 🛑 USER PROFILE SECTION (Using Mock Data) 🛑 */}
-      {/* We pass the profileData object which contains { success: ..., data: ... } */}
+      {/* USER PROFILE */}
       {profileData ? (
         <UserProfile profile={profileData} />
       ) : (
-        // This won't run with hardcoded data, but it's good practice
         <div className="w-full max-w-6xl mx-auto my-6 p-6 text-center text-gray-500">
           Loading User Profile...
         </div>
       )}
 
-      {/* --- LOST & FOUND UI --- */}
+      {/* LOST & FOUND SECTION */}
       <div className="text-center my-8">
         <h1 className="text-3xl font-extrabold text-gray-800 border-b-2 border-indigo-500 inline-block pb-1">
           Lost & Found Board
@@ -119,7 +124,7 @@ export default function User() {
       </div>
 
       <div className="flex flex-col md:flex-row justify-between gap-6 mt-4">
-        {/* Lost Products Section */}
+        {/* Lost Section */}
         <div className="w-full md:w-[48%] h-[520px] p-4 rounded-2xl shadow-xl bg-linear-to-br from-blue-900 to-indigo-800 text-white overflow-hidden hover:shadow-2xl transition-all duration-300">
           <div className="flex justify-between items-center mb-3 border-b border-indigo-500 pb-2">
             <h1 className="text-2xl font-semibold">Lost Products</h1>
@@ -146,7 +151,7 @@ export default function User() {
           </div>
         </div>
 
-        {/* Found Products Section */}
+        {/* Found Section */}
         <div className="w-full md:w-[48%] h-[520px] p-4 rounded-2xl shadow-xl bg-linear-to-br from-purple-900 to-violet-800 text-white overflow-hidden hover:shadow-2xl transition-all duration-300">
           <div className="flex justify-between items-center mb-3 border-b border-violet-500 pb-2">
             <h1 className="text-2xl font-semibold">Found Products</h1>
@@ -174,7 +179,30 @@ export default function User() {
         </div>
       </div>
 
-      {/* CTA Section */}
+      {/* ✅ UPCOMING EVENTS SECTION */}
+      <div className="w-full my-12 px-5 border-2 border-purple-300 text-center  rounded-2xl">
+        <h2 className="text-3xl font-extrabold text-black border-b-2 border-blue-600 inline-block mb-6">
+          Upcoming Events
+        </h2>
+
+        {/* HORIZONTAL SCROLL */}
+        <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar snap-x snap-mandatory">
+          {events.length > 0 ? (
+            events.map((event) => (
+              <div
+                key={event._id}
+                className="shrink-0 snap-start w-[85%] sm:w-[300px] md:w-[340px] lg:w-[360px]"
+              >
+                <EventCard event={event} />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center w-full">No upcoming events.</p>
+          )}
+        </div>
+      </div>
+
+      {/* CTA */}
       <div className="mt-6 text-lg sm:text-xl font-bold text-center text-white bg-black rounded-xl py-4 shadow-md">
         <h1>“Jodo, Sikho aur Badho – Apni College Life Banaye Smart aur Connected!”</h1>
       </div>

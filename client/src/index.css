@@ -3,8 +3,8 @@
 
 /* Firefox */
 * {
-  scrollbar-width: none;        /* hides scrollbar in Firefox */
-  -ms-overflow-style: none;     /* hides scrollbar in IE 10+ / Edge Legacy */
+  scrollbar-width: none; /* hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* hides scrollbar in IE 10+ / Edge Legacy */
 }
 
 /* WebKit browsers (Chrome, Safari, Opera) */
@@ -15,18 +15,19 @@
 }
 
 /* Optional: explicitly target html/body too */
-html, body {
+html,
+body {
   overflow: auto; /* ensure page is scrollable */
 }
 
 /* --- If you want a class to hide scrollbar for specific elements --- */
 .no-scrollbar {
-  overflow: auto;              /* or overflow: scroll; depending on need */
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE 10+ */
+  overflow: auto; /* or overflow: scroll; depending on need */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 .no-scrollbar::-webkit-scrollbar {
-  display: none;               /* WebKit */
+  display: none; /* WebKit */
   width: 0;
   height: 0;
 }

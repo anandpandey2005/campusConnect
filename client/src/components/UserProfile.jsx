@@ -113,90 +113,99 @@ export default function UserProfile({ profile }) {
     <div className="w-full mx-auto bg-zinc-700 text-gray-800 rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-6">
       {/* HEADER - Responsive Layout */}
       <div className="relative bg-gray-900 text-white rounded-xl shadow-2xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10 overflow-hidden transform hover:scale-[1.01] transition-transform duration-500 ease-out">
-    {/* Background Shine/Overlay */}
-    <div className="absolute inset-0 bg-linear-to-br from-blue-900 via-indigo-950 to-gray-900 opacity-95 rounded-xl"></div>
-    <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: "url('/noise-texture.svg')" }}></div>
+        {/* Background Shine/Overlay */}
+        <div className="absolute inset-0 bg-linear-to-br from-blue-900 via-indigo-950 to-gray-900 opacity-95 rounded-xl"></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: "url('/noise-texture.svg')" }}
+        ></div>
 
-    {/* MAIN CONTENT AREA (Profile & Info) */}
-    <div className="flex flex-col lg:flex-row items-center w-full lg:w-3/4 gap-8 z-20">
-        
-        {/* Profile Image - Shining Hover Effect */}
-        <div className="relative flex flex-col items-center group">
+        {/* MAIN CONTENT AREA (Profile & Info) */}
+        <div className="flex flex-col lg:flex-row items-center w-full lg:w-3/4 gap-8 z-20">
+          {/* Profile Image - Shining Hover Effect */}
+          <div className="relative flex flex-col items-center group">
             <div className="relative p-1 rounded-full bg-linear-to-tr from-blue-500 via-purple-500 to-pink-500 transform group-hover:rotate-3 transition-transform duration-500 ease-in-out">
-                <img
-                    src={profile.data.profile || '/nocontent.png'}
-                    alt="Profile"
-                    className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-full border-4 border-gray-900 shadow-xl group-hover:scale-105 transition-transform duration-500"
-                />
+              <img
+                src={profile.data.profile || '/nocontent.png'}
+                alt="Profile"
+                className="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-full border-4 border-gray-900 shadow-xl group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
             {/* Pulsing Blur Effect */}
             <div className="absolute inset-0 rounded-full bg-blue-500/30 blur-3xl scale-110 opacity-0 group-hover:opacity-70 transition-all duration-700 pointer-events-none"></div>
 
             {/* Upload Controls */}
             <input
-                type="file"
-                accept="image/*"
-                id="uploadInput"
-                className="hidden"
-                onChange={handleImageUpload}
+              type="file"
+              accept="image/*"
+              id="uploadInput"
+              className="hidden"
+              onChange={handleImageUpload}
             />
 
             <div className="flex gap-3 mt-4">
-                <label
-                    htmlFor="uploadInput"
-                    className="bg-white text-gray-900 text-sm px-4 py-1.5 rounded-full cursor-pointer hover:bg-gray-200 font-bold shadow-md transition-all transform hover:scale-105 active:scale-95"
+              <label
+                htmlFor="uploadInput"
+                className="bg-white text-gray-900 text-sm px-4 py-1.5 rounded-full cursor-pointer hover:bg-gray-200 font-bold shadow-md transition-all transform hover:scale-105 active:scale-95"
+              >
+                Choose Image
+              </label>
+
+              {file && (
+                <button
+                  onClick={handleUploadToServer}
+                  disabled={uploading}
+                  className={`${
+                    uploading ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
+                  } text-white text-sm px-4 py-1.5 rounded-full font-bold shadow-md transition-all transform hover:scale-105 active:scale-95`}
                 >
-                    Choose Image
-                </label>
-
-                {file && (
-                    <button
-                        onClick={handleUploadToServer}
-                        disabled={uploading}
-                        className={`${
-                            uploading
-                                ? 'bg-gray-600 cursor-not-allowed'
-                                : 'bg-blue-600 hover:bg-blue-500'
-                        } text-white text-sm px-4 py-1.5 rounded-full font-bold shadow-md transition-all transform hover:scale-105 active:scale-95`}
-                    >
-                        {uploading ? 'Uploading...' : 'Upload'}
-                    </button>
-                )}
+                  {uploading ? 'Uploading...' : 'Upload'}
+                </button>
+              )}
             </div>
-        </div>
+          </div>
 
-        {/* User Info */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left min-w-0 grow">
+          {/* User Info */}
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left min-w-0 grow">
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-snug wrap-break-word">
-                Hello, <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-orange-400">{safe(data.fullName)}</span>
+              Hello,{' '}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-orange-400">
+                {safe(data.fullName)}
+              </span>
             </h2>
             <div className="mt-3 pt-2 border-t border-white/20">
               <p className="text-gray-300 text-base md:text-lg whitespace-nowrap">
-                  <span className="text-blue-300 font-medium">Admission No:</span>{' '}
-                  <span className="font-semibold text-white tracking-wider">{safe(data.admissionNumber)}</span>
+                <span className="text-blue-300 font-medium">Admission No:</span>{' '}
+                <span className="font-semibold text-white tracking-wider">
+                  {safe(data.admissionNumber)}
+                </span>
               </p>
               <p className="text-gray-300 text-base md:text-lg whitespace-nowrap">
-                  <span className="text-blue-300 font-medium">Role:</span>{' '}
-                  <span className="font-semibold text-white tracking-wider">{safe(data.role)}</span>
+                <span className="text-blue-300 font-medium">Role:</span>{' '}
+                <span className="font-semibold text-white tracking-wider">{safe(data.role)}</span>
               </p>
             </div>
+          </div>
         </div>
-    </div>
 
-    {/* RIGHT SECTION (Floating Dates) - Clearer Placement and Enhanced Hover */}
-    <div className="w-full lg:w-1/4 pt-4 lg:pt-0 flex justify-center lg:justify-end">
-        <div className="z-10 bg-white/10 border border-white/20 rounded-lg p-4 text-xs sm:text-sm shadow-xl backdrop-blur-md cursor-default transition-all duration-300 hover:bg-white/20 hover:border-blue-400 hover:shadow-blue-500/50">
+        {/* RIGHT SECTION (Floating Dates) - Clearer Placement and Enhanced Hover */}
+        <div className="w-full lg:w-1/4 pt-4 lg:pt-0 flex justify-center lg:justify-end">
+          <div className="z-10 bg-white/10 border border-white/20 rounded-lg p-4 text-xs sm:text-sm shadow-xl backdrop-blur-md cursor-default transition-all duration-300 hover:bg-white/20 hover:border-blue-400 hover:shadow-blue-500/50">
             <p className="text-gray-300 whitespace-nowrap">
-                <span className="font-light text-blue-300">Registered on:</span>{' '}
-                <span className="font-medium text-yellow-400 block sm:inline-block">{formatDate(data.createdAt)}</span>
+              <span className="font-light text-blue-300">Registered on:</span>{' '}
+              <span className="font-medium text-yellow-400 block sm:inline-block">
+                {formatDate(data.createdAt)}
+              </span>
             </p>
             <p className="text-gray-300 mt-2 whitespace-nowrap">
-                <span className="font-light text-blue-300">Last Updated:</span>{' '}
-                <span className="font-medium text-yellow-400 block sm:inline-block">{formatDate(data.updatedAt)}</span>
+              <span className="font-light text-blue-300">Last Updated:</span>{' '}
+              <span className="font-medium text-yellow-400 block sm:inline-block">
+                {formatDate(data.updatedAt)}
+              </span>
             </p>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
       {/* DETAILS SECTION - Responsive Grid */}
       <div className="p-4 sm:p-6">
