@@ -106,8 +106,8 @@ export const get_events_details = async (req, res) => {
     }
 
     const collegeDoc = await SuperAdmin.findById(collegeId).populate({
-      path: "events.eventId", // 👈 populate nested eventId
-      model: "Event", // optional if ref already defined
+      path: "events.eventId",
+      model: "Event",
     });
 
     if (!collegeDoc) {
