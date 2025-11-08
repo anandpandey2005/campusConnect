@@ -6,16 +6,16 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-900 px-4">
-      
       {/* Card */}
       <div className="bg-white rounded-2xl p-10 text-center shadow-xl max-w-md border border-gray-200">
         <h1 className="text-6xl font-extrabold mb-4 text-gray-800">404</h1>
         <h2 className="text-3xl font-semibold mb-4 text-gray-700">Page Not Found</h2>
         <p className="mb-6 text-base text-gray-600">
           Oops! The page you’re looking for doesn’t exist or has been moved. <br />
-          Welcome to <span className="font-bold">Campus Connect</span>, your hub for all campus updates.
+          Welcome to <span className="font-bold">Campus Connect</span>, your hub for all campus
+          updates.
         </p>
-        
+
         {/* Button */}
         <button
           onClick={() => navigate('/')}
