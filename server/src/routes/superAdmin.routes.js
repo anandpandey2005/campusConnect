@@ -17,11 +17,12 @@ import {
 //#################### CONSTANT #####################################################
 const superAdminRoutes = express.Router();
 
-//#################### API END POINT ################################################
+//#################### GET API END POINT ################################################
+superAdminRoutes.get("/", get_profile);
+//#################### POST API END POINT ################################################
 superAdminRoutes.post("/register", upload.single("file"), file_upload, super_admin_register);
 superAdminRoutes.post("/single-admin-register", admin_registration);
 superAdminRoutes.post("/single-user-register", single_user_registration);
-superAdminRoutes.post("/get-profile-details", get_profile);
 superAdminRoutes.post("/add-course", add_course);
 superAdminRoutes.post("/push-notice", upload.single("file"), file_upload, push_notice);
 superAdminRoutes.post("/add-event", upload.single("file"), file_upload, add_event);

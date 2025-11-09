@@ -135,7 +135,7 @@ export default function Login() {
                 Staff
               </option>
               <option value="superadmin" className="bg-indigo-800 text-white">
-                College Admin
+                College
               </option>
             </select>
             {/* Custom chevron icon */}

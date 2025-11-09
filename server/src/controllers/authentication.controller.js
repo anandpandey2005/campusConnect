@@ -352,13 +352,13 @@ export const login = async (req, res) => {
     }
     let Model;
     switch (role) {
-      case "SuperAdmin":
+      case "superadmin":
         Model = SuperAdmin;
         break;
-      case "Admin":
+      case "admin":
         Model = Admin;
         break;
-      case "User":
+      case "user":
         Model = User;
         break;
       default:

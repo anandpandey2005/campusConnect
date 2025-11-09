@@ -49,7 +49,7 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: [true, "password must be non-empty"],
-      minlength: [6, "atleast six character"],
+      minlength: [4, "atleast four character"],
     },
     fatherName: {
       type: String,

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Footer, LostFoundProduct, UserProfile } from '../components';
-import EventCard from '../components/EventCard'; // ✅ import EventCard
+import EventCard from '../components/EventCard';
 
 export default function User() {
   const [products, setProducts] = useState([]);
-  const [events, setEvents] = useState([]); // ✅ Added
+  const [events, setEvents] = useState([]);
   const [seenLost, setSeenLost] = useState(0);
   const [seenFound, setSeenFound] = useState(0);
   const lostRef = useRef(null);
@@ -16,7 +16,7 @@ export default function User() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:2000/api/v1/user/get-profile-details', {
+        const response = await axios.get('http://localhost:2000/api/v1/user/', {
           withCredentials: true,
         });
         setProfileData(response.data);

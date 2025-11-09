@@ -32,7 +32,7 @@ export default function Register() {
       const form = new FormData();
       Object.entries(formData).forEach(([key, value]) => form.append(key, value));
 
-      const res = await axios.post('/campuConnectRegisterPage.png', form, {
+      const res = await axios.post('http://localhost:2000/api/v1/superAdmin/register/', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
