@@ -8,14 +8,6 @@ import { verify_token } from "../../utils/jsonwebtoken.utils.js";
 export const push_notice = async (req, res) => {
   try {
     const { title, description, link } = req?.body || {};
-    const cloudinaryUrl = req?.file?.cloudinaryUrl || "";
-
-    let file = cloudinaryUrl;
-
-    if (!cloudinaryUrl || cloudinaryUrl.length < 1) {
-      file = "#";
-      console.warn("No file uploaded, setting file to '#'");
-    }
 
     if (!title) {
       return ApiResponse.error(res, "title must be non-empty", 400);

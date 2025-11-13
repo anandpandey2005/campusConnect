@@ -89,7 +89,6 @@ export const get_events_details = async (req, res) => {
     } catch (err) {
       return ApiResponse.error(res, "Invalid or expired token.", 401);
     }
-
     const { _id, role, user } = decoded;
     const collegeId = user?.college;
 

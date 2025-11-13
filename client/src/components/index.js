@@ -5,3 +5,4 @@ export { default as LostFoundProduct } from './LostFoundProducts.jsx';
 export { default as UserProfile } from './UserProfile.jsx';
 export { default as EventCard } from './EventCard.jsx';
 export { default as FacultyProfile } from './FacultyProfile.jsx';
+export { default as Notice } from './Notice.jsx';

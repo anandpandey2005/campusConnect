@@ -17,11 +17,7 @@ const NoticeSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-    },
-    file: {
-      type: String,
-      default: "#",
-      trim: true,
+      default: null,
     },
     college: {
       type: mongoose.Schema.Types.ObjectId,

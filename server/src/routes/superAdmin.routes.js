@@ -9,7 +9,10 @@ import { add_course } from "../controllers/superAdmin/course.superAdmin.controll
 import { push_notice } from "../controllers/superAdmin/notice.superAdmin.controller.js";
 import { file_upload } from "../utils/cloudinary.utils.js";
 import { upload } from "../middleware/multer.middleware.js";
-import { add_event } from "../controllers/superAdmin/events.superAdmin.controller.js";
+import {
+  add_event,
+  get_events_details,
+} from "../controllers/superAdmin/events.superAdmin.controller.js";
 import {
   campusConnect_add,
   campusConnect_getAll,
@@ -19,12 +22,13 @@ const superAdminRoutes = express.Router();
 
 //#################### GET API END POINT ################################################
 superAdminRoutes.get("/", get_profile);
+superAdminRoutes.get("/get-event-details", get_events_details);
 //#################### POST API END POINT ################################################
 superAdminRoutes.post("/register", upload.single("file"), file_upload, super_admin_register);
 superAdminRoutes.post("/single-admin-register", admin_registration);
 superAdminRoutes.post("/single-user-register", single_user_registration);
 superAdminRoutes.post("/add-course", add_course);
-superAdminRoutes.post("/push-notice", upload.single("file"), file_upload, push_notice);
+superAdminRoutes.post("/push-notice", push_notice);
 superAdminRoutes.post("/add-event", upload.single("file"), file_upload, add_event);
 
 //######################### TESTING API #############################################

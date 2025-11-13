@@ -16,6 +16,7 @@ const userRoutes = express.Router();
 userRoutes.get("/", get_profile);
 userRoutes.get("/get-event-details", get_events_details);
 userRoutes.get("/get-lostFoundProduct", get_lost_found_product);
+userRoutes.get("/get-notice", get_lost_found_product);
 
 //###################  post route
 

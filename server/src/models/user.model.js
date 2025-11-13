@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { SuperAdmin } from "./superAdmin.model.js";
 import { Course } from "./course.model.js";
+import { LostFoundProduct } from "./lostfoundproduct.model.js";
 import bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
@@ -81,6 +82,14 @@ const UserSchema = new Schema(
         branch: {
           type: String,
           lowercase: true,
+        },
+      },
+    ],
+    foundProduct: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "LostFoundProduct",
         },
       },
     ],

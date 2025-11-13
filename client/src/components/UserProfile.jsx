@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaSpeakerDeck } from 'react-icons/fa';
 
-// --- InfoCard Component (Accordion/Shutter Logic) ---
-/* * This component provides the dropdown/shutter functionality.
- * The 'onClick' on the button toggles 'isOpen', which controls the CSS transition
- * (max-h-0 to max-h-96) to create the smooth open/close effect.
- */
 const InfoCard = ({ title, children, initialOpen = false }) => {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
@@ -54,6 +50,16 @@ export default function UserProfile({ profile }) {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [Notice, setNotice] = useState(null);
+
+  useEffect(() => {
+    try {
+      const notice_get = axios.get('http://localhost:2000/api/v1/user/get-event-details', {
+        withCredentials: true,
+      });
+      setNotice(notice_get);
+    } catch (error) {}
+  }, []);
 
   // --- Gracious Handling for Missing Profile Data ---
   if (!profile || !profile.data) {
@@ -111,6 +117,12 @@ export default function UserProfile({ profile }) {
 
   return (
     <div className="w-full mx-auto bg-zinc-700 text-gray-800 rounded-2xl shadow-xl border border-gray-200 overflow-hidden my-6">
+      <div className="w-full h-auto px-3 py-2 bg-amber-50 flex overflow-hidden">
+        <div>
+          <strong>Notice :</strong>
+        </div>
+        <div></div>
+      </div>
       {/* HEADER - Responsive Layout */}
       <div className="relative bg-gray-900 text-white rounded-xl shadow-2xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10 overflow-hidden transform hover:scale-[1.01] transition-transform duration-500 ease-out">
         {/* Background Shine/Overlay */}

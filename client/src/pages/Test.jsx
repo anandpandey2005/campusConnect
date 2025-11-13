@@ -1,5 +1,10 @@
 import React from 'react';
+import { Notice } from '../components';
 
 export default function Test() {
-  return <div>Test</div>;
+  return (
+    <div>
+      <Notice></Notice>
+    </div>
+  );
 }
